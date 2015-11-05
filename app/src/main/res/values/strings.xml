@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">EarlyRenaissance</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="github_title">EarlyRenaissance</string>
+    <string name="github">github</string>
+    <string name="title_activity_ultra_pull_to_refresh_demo">UltraPullToRefreshDemo</string>
+
+    <string name="description">Description:&#160;</string>
+    <string name="prefix">Profile:&#160;</string>
+    <string name="des_default">EarlyRenaissance</string>
+
+    <string name="des_ultra_pull_to_refresh">liaohuqiu/android-Ultra-Pull-To-Refresh</string>
+
+</resources>

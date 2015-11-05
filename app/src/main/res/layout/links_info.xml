@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/links_info_layout"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <include
+        layout="@layout/divider"
+        android:id="@+id/divider_1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height" />
+
+    <Button
+        android:id="@+id/links_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_below="@+id/divider_1"
+        android:gravity="center"
+        android:textSize="@dimen/sp_16"
+        android:textAllCaps="false"
+        android:textColor="@android:color/darker_gray"
+        android:background="@drawable/button_press_selector"/>
+
+</RelativeLayout>
