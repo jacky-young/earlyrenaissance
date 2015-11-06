@@ -38,6 +38,7 @@ public class BaseActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.github) {
+            AppUtils.urlOpen(context, "https://github.com/jacky-young/earlyrenaissance");
             return true;
         }
 

@@ -15,7 +15,7 @@ import java.util.LinkedList;
 
 public class MainActivity extends BaseActivity {
 
-    private static final String[] demoStrings = {"UltraPullToRefreshDemo", "Simone Martin",
+    public static final String[] demoStrings = {"UltraPullToRefreshDemo", "Simone Martin",
                 "Raffaello Sanzio", "Hugo Van der Goes", "Simon Vouet", "Francois Lemoyne", "Edouard Manet"};
     private static final int total = demoStrings.length - 1;
 

@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -33,7 +32,7 @@ public class AppUtils {
         ActionBar actionBar = activity.getSupportActionBar();
         assert actionBar != null;
         if (activity instanceof MainActivity) {
-            actionBar.setLogo(R.drawable.ic_launcher);
+            actionBar.setLogo(R.drawable.github);
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM
                     | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_USE_LOGO);
         } else {
@@ -53,9 +52,7 @@ public class AppUtils {
             return;
         }
 
-        Log.d("DEMO", result[1]);
         Spanned txt = Html.fromHtml(result[1]);
-        Log.d("DEMO", txt+"");
         link.setText(txt);
         link.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +66,7 @@ public class AppUtils {
         if (activity == null) {
             return null;
         }
-        int prefixSrcId = R.string.description, contentSrcId;
+        int prefixSrcId = R.string.prefix, contentSrcId;
         String url = null;
 
         Class<?> cls = activity.getClass();
@@ -77,9 +74,8 @@ public class AppUtils {
             contentSrcId = R.string.des_ultra_pull_to_refresh;
             url = "https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh";
         } else {
-            prefixSrcId = R.string.prefix;
             contentSrcId = R.string.des_default;
-            url = "http://www.trinea.cn";
+            url = "https://github.com/jacky-young/earlyrenaissance";
         }
         String[] result = new String[] {url, getUrlInfo(activity.getString(prefixSrcId),
                 url, activity.getString(contentSrcId))};
@@ -91,7 +87,7 @@ public class AppUtils {
                 .append("</a>").toString();
     }
 
-    private static void urlOpen(Context context, String url) {
+    public static void urlOpen(Context context, String url) {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
