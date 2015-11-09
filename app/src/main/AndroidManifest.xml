@@ -26,6 +26,14 @@
             android:name=".ui.UltraPullToRefreshDemo"
             android:label="@string/title_activity_ultra_pull_to_refresh_demo" >
         </activity>
+        <activity
+            android:name=".ui.ButterKnifeDemo"
+            android:label="@string/title_activity_butter_knife_demo">
+        </activity>
+        <activity
+            android:name=".ui.TabHostFragmentDemo"
+            android:label="@string/title_activity_tab_host_fragment_demo">
+        </activity>
     </application>
 
 </manifest>

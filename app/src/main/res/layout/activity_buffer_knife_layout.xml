@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/im_btn_bk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/sp_16"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:drawableTop="@drawable/github"  />
+
+    <TextView
+        android:id="@+id/tv_bk"
+        android:layout_below="@+id/im_btn_bk"
+        android:text="This is a test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/et_bk"
+        android:layout_below="@+id/tv_bk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_bk"
+        android:layout_below="@+id/et_bk"
+        android:text="Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <include
+        layout="@layout/links_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

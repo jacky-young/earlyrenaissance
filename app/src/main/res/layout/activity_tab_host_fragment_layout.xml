@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fg_content"
+        android:layout_above="@+id/layout_tab_host"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_tab_host"
+        android:layout_above="@+id/links_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/holo_green_light">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Message"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_16"
+            android:drawableTop="@android:drawable/ic_menu_save"
+            android:background="@drawable/button_press_selector"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Contact"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_16"
+            android:drawableTop="@android:drawable/ic_menu_search"
+            android:background="@drawable/button_press_selector"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="News"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_16"
+            android:drawableTop="@android:drawable/ic_menu_send"
+            android:background="@drawable/button_press_selector"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Setting"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_16"
+            android:drawableTop="@android:drawable/ic_menu_share"
+            android:background="@drawable/button_press_selector"/>
+    </LinearLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/links_info"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

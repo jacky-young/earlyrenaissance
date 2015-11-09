@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.young.jacky.earlyrenaissance.R;
+import com.young.jacky.earlyrenaissance.ui.ButterKnifeDemo;
 import com.young.jacky.earlyrenaissance.ui.MainActivity;
+import com.young.jacky.earlyrenaissance.ui.TabHostFragmentDemo;
 import com.young.jacky.earlyrenaissance.ui.UltraPullToRefreshDemo;
 
 /**
@@ -73,6 +75,12 @@ public class AppUtils {
         if (cls == UltraPullToRefreshDemo.class) {
             contentSrcId = R.string.des_ultra_pull_to_refresh;
             url = "https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh";
+        } else if (cls == ButterKnifeDemo.class) {
+            contentSrcId = R.string.des_butter_knife;
+            url = "https://github.com/JakeWharton/butterknife";
+        } else if (cls == TabHostFragmentDemo.class) {
+            contentSrcId = R.string.des_tab_host_fragment;
+            url = "http://developer.android.com/guide/components/fragments.html";
         } else {
             contentSrcId = R.string.des_default;
             url = "https://github.com/jacky-young/earlyrenaissance";
