@@ -59,7 +59,9 @@ public class AppUtils {
         link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                urlOpen(activity, result[0]);
+                if (result[0] != null) {
+                   urlOpen(activity, result[0]);
+                }
             }
         });
     }
@@ -80,7 +82,7 @@ public class AppUtils {
             url = "https://github.com/JakeWharton/butterknife";
         } else if (cls == TabHostFragmentDemo.class) {
             contentSrcId = R.string.des_tab_host_fragment;
-            url = "http://developer.android.com/guide/components/fragments.html";
+            url = null;
         } else {
             contentSrcId = R.string.des_default;
             url = "https://github.com/jacky-young/earlyrenaissance";
