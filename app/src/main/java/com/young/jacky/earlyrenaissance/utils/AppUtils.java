@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.young.jacky.earlyrenaissance.R;
 import com.young.jacky.earlyrenaissance.ui.ButterKnifeDemo;
 import com.young.jacky.earlyrenaissance.ui.MainActivity;
+import com.young.jacky.earlyrenaissance.ui.SQLiteDBDemo;
 import com.young.jacky.earlyrenaissance.ui.TabHostFragmentDemo;
 import com.young.jacky.earlyrenaissance.ui.UltraPullToRefreshDemo;
 
@@ -82,6 +83,9 @@ public class AppUtils {
             url = "https://github.com/JakeWharton/butterknife";
         } else if (cls == TabHostFragmentDemo.class) {
             contentSrcId = R.string.des_tab_host_fragment;
+            url = null;
+        } else if (cls == SQLiteDBDemo.class) {
+            contentSrcId = R.string.des_sqlite_db_demo;
             url = null;
         } else {
             contentSrcId = R.string.des_default;

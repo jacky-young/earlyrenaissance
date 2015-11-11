@@ -16,7 +16,7 @@ import java.util.LinkedList;
 public class MainActivity extends BaseActivity {
 
     public static final String[] demoStrings = {"UltraPullToRefreshDemo", "ButterKnifeDemo",
-                "TabHostFragmentDemo", "Hugo Van der Goes", "Simon Vouet", "Francois Lemoyne", "Edouard Manet"};
+                "TabHostFragmentDemo", "SQLiteDBDemo", "Simon Vouet", "Francois Lemoyne", "Edouard Manet"};
     private static final int total = demoStrings.length - 1;
 
     @Override
@@ -36,8 +36,10 @@ public class MainActivity extends BaseActivity {
                     startActivity(UltraPullToRefreshDemo.class);
                 } else if (position == total - 5) {
                     startActivity(ButterKnifeDemo.class);
-                } else  if (position == total - 4) {
+                } else if (position == total - 4) {
                     startActivity(TabHostFragmentDemo.class);
+                } else if (position == total - 3) {
+                    startActivity(SQLiteDBDemo.class);
                 }
             }
         });

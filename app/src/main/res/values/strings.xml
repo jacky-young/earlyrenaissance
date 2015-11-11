@@ -11,6 +11,7 @@
     <string name="title_activity_ultra_pull_to_refresh_demo">UltraPullToRefreshDemo</string>
     <string name="title_activity_butter_knife_demo">ButterKnifeDemo</string>
     <string name="title_activity_tab_host_fragment_demo">TabHostFragmentDemo</string>
+    <string name="title_activity_sqlite_db_demo">SQLiteDBDemo</string>
 
     <string name="description">Description:&#160;</string>
     <string name="prefix">Profile:&#160;</string>
@@ -19,5 +20,6 @@
     <string name="des_ultra_pull_to_refresh">liaohuqiu/android-Ultra-Pull-To-Refresh</string>
     <string name="des_butter_knife">JakeWharton/butterknife</string>
     <string name="des_tab_host_fragment">TabHost Fragment</string>
+    <string name="des_sqlite_db_demo">SQLite DB TEST</string>
 
 </resources>
