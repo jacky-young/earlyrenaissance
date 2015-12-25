@@ -5,6 +5,11 @@
 * activity launch 4 ways: `standard`/`singleTop`/`singleTask`/`singleInstance`
   * 默认，每次激活activity就会新建activity实例，放入任务栈/如果av实例在栈顶，直接启动，否则新建/只要栈内存在av实例，它上面的实例会被移出栈，重回栈顶/在一个新栈中创建av实例，让多应用共享该实例，相当于多应用共享一个应用，不管谁激活该av都会进入该应用
   * 如果希望多次调用只有一个av实例存在，launchMode="sigleTask" + onNewIntent(intent)，再次启动av时onNewIntent-->onRestart-->onStart-->onResume，在OnNewInent()中要setIntent(intent)，这样在getIntent()时才能得到新的intent
+  * `Application``Task``Process`，在android中，一个应用是一组组件的集合；task是在程序运行时只针对activity的概念，task是一组相互关联的activity的集合，是framework层的一个概念，这个task存在于一个称为back stack的数据结构中，实现应用界面的跳转，也就是说framework层是以栈的形式管理用户开启的activity的，task是可以跨应用的，为了用户操作的连贯性；进程是操作系统内核的一个概念，在应用程序的角度看，android应用运行在dalvik（现已被ART取代）虚拟机中，可以认为一个运行中的dalvik虚拟机实例占有一个进程，默认情况下，一个应用程序的所有组件是运行在同一进程中，但也有例外，可以通过manifest中android:process指定进程名称
+  * Android之taskAffinity，表示当前activity所在的任务，像身份证一样，从概念上讲，相同affinity的activity属于同一任务，默认情况下所有activity的affinity都是manifest中的包名，可以设置不同应用的affinity相同，运行时就会存在同一任务中，Task不仅可以跨应用，而且可以跨进程。启动activity会设置FLAG_ACTIVITY_NEW_TASK标志，走onNewIntent()
+  * singleTask/singleInstance + affinity
+    * singleTask：single in task，启动时framework层会标记为可在一个新任务中启动，但不一定
+    * singleInstance：这个模式的activity总是会在新任务中运行(前提是系统还不存在这样一个实例)，正因为singleInstance的全局唯一性，被它启动的activity都会运行在其它任务中，启动时会加上FLAG_ACTIVITY_NEW_TASK标志，同singleTask
 * onCreate-->onStart-->onResume-->Running-->onPause-->onStop-->onDestroy, av可见区onResume-->Running-->onPause
 * android应用程序的生命周期，系统根据进程内运行的组件和这些组件的状态，把这些进程分为前端进程，可视进程，服务进程，后台进程，空进程
 
@@ -31,3 +36,27 @@
 * `Android单元测试``Android依赖管理``公共库选型(依赖注入，ORM，网络类)``渠道打包``开发效率`
   * Android Http请求API: JAVA的HttpURLConnection, Apache的HttpClient，2.3之后推荐使用前者，默认开启gzip，connection keepAlive
   * 第三方的Http网络库Volley，OKHttp，Retrofit，客户端与服务器交互的数据格式主流是json，推荐使用google-gson
+
+-------
+
+* Android布局优化，目标高效且复用性高的UI，建议：尽量多使用RelativeLayout布局，减少嵌套复杂度；可复用的组件抽出用include标签；使用ViewStub标签加载一些不常用的布局，例如只有特殊情况下才显示的进度布局，网络失败刷新布局，信息出错的提示布局等；使用merge标签减少布局的嵌套层次，一是用于布局根节点是Framelayout，二是include时作为该布局的顶节点，这样引入时子节点就会自动合并到主布局
+
+
+-------
+
+* Service与Thread的关系，答案是没有任何关系。Thread是开启一个子线程，去执行一些耗时操作就不会影响主线程的运行，而Service的理解是执行一些后台任务，一些耗时操作也可以放在里面运行。但实际上Service是运行在主线程的，后台和子线程是不同的概念，后台的运行是完全不依赖UI的，那为什么不直接在activity中创建线程呢？那是因为activity很难对Thread进行控制，activity销毁后很难再获得之前的Thread实例，而且不同activity没法对同一个thread进行操作，但Service不同，所有activity都可以与Service关联，操作其中的方法，activity finish后只要在重新与Service建立连接，就能够重新获得之前的binder实例
+* Service的启动方式，使用情况，结束方式
+  * startService启动服务，结束用stopService，用于开启一个后台服务执行一个耗时任务，不需要通信
+  * bindService启动服务，结束用unbindService或者调用的Context finish之后
+  * start和bind同时启动，结束也要都调用stop和unbind，不分先后，这样activity就可以更新Service的状态
+* android:process=""，可以设置服务是否运行在另外一个进程
+
+-------
+
+* 横竖屏切换时activity的生命周期
+  * android:configChanges="orientation"或者不设，横切竖，竖切横，生命周期都会执行一遍，onPause-->onSaveInstanceState-->onStop-->onDestroy-->onCreate-->onStart-->onRestoreInstanceState-->onResume
+  * >=API13, android:configChanges="orientation|keyboardHidden|screenSize"，不会重建activity，只会执行onConfigurationChanged；<API13，只需设置前两项
+
+-------
+
+* android序列化Serializable, Parcelable
