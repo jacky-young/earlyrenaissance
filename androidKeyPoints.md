@@ -50,6 +50,11 @@
   * bindService启动服务，结束用unbindService或者调用的Context finish之后
   * start和bind同时启动，结束也要都调用stop和unbind，不分先后，这样activity就可以更新Service的状态
 * android:process=""，可以设置服务是否运行在另外一个进程
+* IntentService，异步处理服务，使用工作线程逐一处理所有启动要求，只需实现onHandleIntent()方法即可，该方法会接收每个启动请求的Intent，使您能执行后台工作，永远不必担心多线程问题
+  * 不需要主动调用stopSelf()来结束服务，当所有intent被处理完后，系统会自动关闭服务
+  * 默认实现onBind()返回null
+  * 默认实现onStartCommand()的目的是将intent插入到工作队列中
+  * 如果要重写其他回调方法(onCreate, onStartCommand, onDestroy)，请确保调用超类实现
 
 -------
 
@@ -60,3 +65,14 @@
 -------
 
 * android序列化Serializable, Parcelable
+
+-------
+
+* android broadcastreceiver，使用观察者模式，基于消息的发布/订阅事件模型，广播的发布者和接收者解耦，类似的第三方lib EventBus
+  * 普通广播、系统广播、有序广播、粘性广播（5.0 deprecated），Local Broadcast（应用内广播）
+  * 静态注册的广播接收器即使app已经退出，仍然能够接收到，自Android3.1后可能不再成立，对于系统广播app退出后是无法接收到的，但对于自定义的广播，可以通过设置flag为FLAG_INCLUDE_STOPPED_PACKAGES，获得接收
+  * LocalBroadcastManager方式发送的广播，只能通过LocalBroadcastManger注册的ContextReceiver才能接收，静态注册或者其他方式动态注册的ContextReceiver接收不到
+
+-------
+
+* Android的数据存储：`Preference(通常是键值对)``文件(手机设备或外设存储，缺省只能由创建它的应用访问)``数据库(如SQLite方式，由创建的应访问)``网络(Android提供API远程在服务器上存储数据)`
