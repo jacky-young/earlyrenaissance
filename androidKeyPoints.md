@@ -76,3 +76,25 @@
 -------
 
 * Android的数据存储：`Preference(通常是键值对)``文件(手机设备或外设存储，缺省只能由创建它的应用访问)``数据库(如SQLite方式，由创建的应访问)``网络(Android提供API远程在服务器上存储数据)`
+
+-------
+
+* Android ListView优化：
+  * 利用好convertView来重用view，ViewHolder，TAG必不可少
+  * ItemView的Layout层次结构尽量简单，要善用自定义的View
+  * 分页加载，分批加载
+  * getView()要尽量做少的事情，不要有耗时操作，特别是滑动时不要加载图片，停下来再加载
+  * 尽量避免在适配器中使用线程，因为周期不可控，涉及图片加载可以使用较成熟的第三方lib，比如Picasso, glide, ImageLoader, Volley
+  * 为了满足需求必须使用Context的话，尽量使用Application Context，因为Application Context生命周期比较长，不易出现内存泄露
+  * 尽量避免在BaseAdapter中使用static来定义全局静态变量
+  * 使用RecycleView代替，RecycleView 在性能和可定制性上都有很大的改善，推荐使用
+
+-------
+
+* Android子线程中更新UI的方法：
+  * 主线程定义Handler，子线程发送message，通知Handler完成UI更新
+  * 子线程通过runOnUiThread更新，在非上下文类中，需要传递Activity对象
+  * View.post(Runnable r)，需要传递更新的view过去
+* Android线程间通信，进程间通信
+  * AsyncTask， Handler，
+  * IPC机制Binder
