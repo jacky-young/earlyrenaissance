@@ -98,3 +98,20 @@
 * Android线程间通信，进程间通信
   * AsyncTask， Handler，
   * IPC机制Binder
+  * synchronized机制，当两个并发程序访问同一个object的synchronized(this)同步代码时，一个时间内只有一个线程得到执行，另一个线程必须等到当前线程执行完代码后才能执行
+ 
+-------
+
+* Android处理崩溃异常：
+  * 继承Thread.UncaughtExceptionHandler, 重写uncaughtException()方法，退出程序，收集信息，保存log文件
+  * 自定义Application，注册未捕获异常处理器
+  * 异常退出后提示用户是否上传log信息，可以通过service实现
+
+-------
+
+* Intent是Android系统各组件之间进行数据传递的数据负载者，当我们需要做一个调用动作，就可以通过Intent告诉Android系统来完成这个过程。Intent有几个重要的属性
+  * action：要执行的动作，<intent-filter>中声明<action>，new Intent(Action action)中指定目标action。除自定义action外，Intent中内含许多默认的action，如ACTION_MAIN，ACTION_VIEW，ACTION_WEB_SEARCH
+  * data和extras：执行动作操作的数据和传递到目标的附加信息，为intent指定一个data属性，其实就是指定要操作的数据，要符合<data/>元素的匹配规则；extras涉及到bundle对象，bundle主要负责为intent保存附加参数信息，它实现了Paracelable接口，内部维护一个Map类型的属性，以键值对的方式存放参数信息，通过intent.putExtras()/getExtras()存取bundle实例
+  * category：要执行动作的目标所具有的特质或行为归类，几种常见的category，如Intent.LAUNCHER，Intent.CATEGORY_DEFAULT，Intent.CATEGORY_PREFERENCE，Intent.CATEGORY_BROWSABLE
+  * type：要执行动作的目标activity所能处理的MIME数据类型，例如<data android:mimeType="image/*">
+  * component：目标组件的包名或类名，值得注意的是，如果在intent中指定了component属性，系统将不会再对action、data/type、category进行匹配。e.g. intent.setComponent(new ComponentName(getApplicationContext(), TargetActivity.class))
