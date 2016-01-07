@@ -2,6 +2,7 @@
 
 * android ant build cmd: 1.android list target 2.android create project --name %s --target android-%s --path %s --package %s --activity %s 3.vi project.properties 4.ant debug/ant release -f build.xml -Dkey.store=%s -Dkey.alias=%s -Dkey.store.password=%s -Dkey.alias.password=%s
 * android ant build jar lib cmd: 1.android list target 2.android update project --target android-%s --path %s 3.ant release -Dandroid.library=true 4.bin/classes.jar
+* android packaging proces：1.先编译java成class(包括生成R.java, aapt命令; 编译class, javac命令) 2.再把class和jar转化成dex(dx命令) 3.接着打包assets和res等资源文件为res.zip(aapt命令) 4.然后把dex和res.zip合并成一个未签名的apk(apkbuilder命令) 5.签名(jarsigner命令) 最终就是一个带签名的apk文件
 * activity launch 4 ways: `standard`/`singleTop`/`singleTask`/`singleInstance`
   * 默认，每次激活activity就会新建activity实例，放入任务栈/如果av实例在栈顶，直接启动，否则新建/只要栈内存在av实例，它上面的实例会被移出栈，重回栈顶/在一个新栈中创建av实例，让多应用共享该实例，相当于多应用共享一个应用，不管谁激活该av都会进入该应用
   * 如果希望多次调用只有一个av实例存在，launchMode="sigleTask" + onNewIntent(intent)，再次启动av时onNewIntent-->onRestart-->onStart-->onResume，在OnNewInent()中要setIntent(intent)，这样在getIntent()时才能得到新的intent
@@ -68,7 +69,7 @@
 
 -------
 
-* android broadcastreceiver，使用观察者模式，基于消息的发布/订阅事件模型，广播的发布者和接收者解耦，类似的第三方lib EventBus
+* android broadcastreceiver，使用观察者模式，基于消息的发布/订阅事件模型，广播的发布者和接收者解耦，类似的第三方lib EventBus Otto
   * 普通广播、系统广播、有序广播、粘性广播（5.0 deprecated），Local Broadcast（应用内广播）
   * 静态注册的广播接收器即使app已经退出，仍然能够接收到，自Android3.1后可能不再成立，对于系统广播app退出后是无法接收到的，但对于自定义的广播，可以通过设置flag为FLAG_INCLUDE_STOPPED_PACKAGES，获得接收
   * LocalBroadcastManager方式发送的广播，只能通过LocalBroadcastManger注册的ContextReceiver才能接收，静态注册或者其他方式动态注册的ContextReceiver接收不到
@@ -106,6 +107,12 @@
   * 继承Thread.UncaughtExceptionHandler, 重写uncaughtException()方法，退出程序，收集信息，保存log文件
   * 自定义Application，注册未捕获异常处理器
   * 异常退出后提示用户是否上传log信息，可以通过service实现
+* App调试的几个命令：
+  * logcat：logcat -v time *:E
+  * bugreport：存储开机之后详细的dumpsys,dumpstate和logcat信息，是一份完整的日志记录
+  * dumpsys：查看系统信息
+  * top：cpu信息
+  * 配置文件local.prop：可用于调试数据库
 
 -------
 
@@ -115,3 +122,18 @@
   * category：要执行动作的目标所具有的特质或行为归类，几种常见的category，如Intent.LAUNCHER，Intent.CATEGORY_DEFAULT，Intent.CATEGORY_PREFERENCE，Intent.CATEGORY_BROWSABLE
   * type：要执行动作的目标activity所能处理的MIME数据类型，例如<data android:mimeType="image/*">
   * component：目标组件的包名或类名，值得注意的是，如果在intent中指定了component属性，系统将不会再对action、data/type、category进行匹配。e.g. intent.setComponent(new ComponentName(getApplicationContext(), TargetActivity.class))
+
+-------
+
+* Android手机自动化测试工具
+  * Monkey：Android SDK自带的测试工具，测试过程中向系统发送伪随机的用户事件流，一般用于对应用程序的压力测试
+  * MonkeyRunner：Android SDK提供的测试工具，其实是一套API工具包，使用python编写测试脚本定义数据，事件
+  * Instrumentation：Google提供的Android自动化测试工具类，结合JUnit，允许对应用程序做更复杂的测试，甚至是框架层面。Instrumentation是通过把主程序和测试程序运行在同一进程中来实现功能，可以将其看作是类似activity或者service并且不带界面的组件，在程序运行期间监控你的主程序
+  * Espresso：Google的开源自动化测试框架，testing UI for a single app，其测试框架基于instrumentation，不能跨App，其特点是规模小，更简洁，API更加准确
+  * UiAutomator：Android提供的自动化测试框架，基本上支持所有的Android事件操作，不需要测试人员了解代码实现细节，测试代码结构简单，可以跨App，缺点只支持Android 4.1+。另有基于此的开源python框架uiautomator实现
+  * 其它的测试框架：Selendroid，Robotium，Appium，商业工具如testin
+
+-------
+
+* RESTful(Representational State Transfer): 面向资源，是一种架构，不是协议，只要Web Service能够满足REST的几个条件，通常就称这个系统是RESTful的。条件包括C/S结构，无状态，可以cache，分层系统，统一接口，与HTTP协议近似，三个要素是唯一的资源标识, 简单的方法(此处的方法是个抽象的概念), 一定的表达方式.
+* RPC(Remote procedure call): 所谓的远程过程调用（面向方法），像调用本地服务(方法)一样调用服务器的服务(方法)。通常实现由XML-RPC， JSON-RPC。记住一点RPC是以动词为中心的, REST是以名词为中心的。
