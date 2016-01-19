@@ -1,6 +1,7 @@
 ##JAVA Key Points
 
 * 面向对象编程语言有封装、继承、抽象、多态4个主要的特征
+* 接口：接口中可以包含变量和方法，但变量会被隐式地指定为且只能是public static final，方法则指定为且只能是public abstract。如果一个非抽象类遵循了该接口，则必须实现接口中所有的方法，而抽象类则可以不用实现
 * 接口和抽象类的区别：
   * 接口是用来实现的implements，而抽象类是别继承的extends
   * 接口可以继承多个接口，组成一个新的接口
@@ -29,7 +30,7 @@ class Single2{ //懒汉式
   }
 }
 ```
-  
+
 *******
 
 * &和&&的区别：都可以做逻辑与运算，&&具有短路功能，&还可以用作位运算符
@@ -48,3 +49,28 @@ a = a ^ b;
 b = a ^ b;
 a = a ^ b;
 ```
+
+*******
+
+* 多线程有两种实现方式：分别是继承Thread类和实现Runnable接口
+* 同步的实现有两种：分别是synchronized，wait和notify
+* 异常分为Error和Exception，Throwable是所有异常类的父类，Exception包含RuntimeException和RuntimeException之外的异常
+
+*******
+
+```
+Collection
+├List
+│├LinkedList
+│├ArrayList
+│└Vector
+│　└Stack
+└Set
+Map
+├Hashtable
+├HashMap
+└WeakHashMap
+```
+* List是有序的Collection。LinkedList双向链表，允许null元素，插入删除速度快，非同步；ArrayList线性表，可变大小的数组，非同步；Vector类似ArrayList，同步的
+* Set是不包含重复元素的Collection
+* Map没有持续Collection接口，提供key-value映射。Hashtable是一个实现key-value映射的哈希表，不允许null元素，同步的；HashMap长短同步的，允许null
