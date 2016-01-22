@@ -137,3 +137,11 @@
 
 * RESTful(Representational State Transfer): 面向资源，是一种架构，不是协议，只要Web Service能够满足REST的几个条件，通常就称这个系统是RESTful的。条件包括C/S结构，无状态，可以cache，分层系统，统一接口，与HTTP协议近似，三个要素是唯一的资源标识, 简单的方法(此处的方法是个抽象的概念), 一定的表达方式.
 * RPC(Remote procedure call): 所谓的远程过程调用（面向方法），像调用本地服务(方法)一样调用服务器的服务(方法)。通常实现由XML-RPC， JSON-RPC。记住一点RPC是以动词为中心的, REST是以名词为中心的。
+
+-------
+
+* 图像占用内存的公式是：numBytes = width * height * bitsPerPixel / 8。OpenGL ES纹理的宽和高都要是2次幂数，所以start.png本身是480x480，载入内存后就会变成512x512的纹理，对于每一个像素点使用4byte表示--1个byte（8位）代表red，另外3个byte分别表示green、blue、alpha，这个简称为RGBA8888。一个512x512的图片耗费内存为512x512x4=1MB
+* android退出程序往往会调用以下方法：
+  * 关闭掉所有界面
+  * 干掉当前进程，android.os.Process.killProcess(android.os.Process.myPid());
+  * 结束JVM，System.exit(0);
