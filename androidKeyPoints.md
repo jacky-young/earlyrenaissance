@@ -65,7 +65,8 @@
 
 -------
 
-* android序列化Serializable, Parcelable
+* android序列化Serializable, Parcelable 
+  * Serializable只需要实现当前接口，不需要重写任何方法，比较简单，适合本地长时间存储，Parcelable效率比Serializable高，内存存储，适合应用内及应用之间传递数据，需要实现writeToParcel、describeContents函数以及静态的CREATOR变量，实际上就是将如何打包和解包的工作自己来定义，而序列化的这些操作完全由底层实现
 
 -------
 
@@ -145,3 +146,6 @@
   * 关闭掉所有界面
   * 干掉当前进程，android.os.Process.killProcess(android.os.Process.myPid());
   * 结束JVM，System.exit(0);
+* Context.MODE_PRIVATE: 默认操作模式，代表文件是私有数据，只能被应用本身访问，该模式下写入的内容会覆盖原有内容
+* Context.MODE_APPEND: 模式会检查文件是否存在，存在就往文件追加内容，否则就创建新文件
+* Context.MODE_WORLD_READABLE：表示当前文件可以被其他应用读取 MODE_WORLD_WRITEABLE：表示当前文件可以被其他应用写入
