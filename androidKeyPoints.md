@@ -19,6 +19,16 @@
 * android屏幕适配，屏幕尺寸即对角线长度(英寸1inch=2.54cm)/屏幕密度density=(dpi/160)/分辨率即总像素数(width*height)/dpi即每英寸点数/dp设备独立像素，在屏幕密度=160dpi时，1dp=1px，px=dp*(dpi/160)/sp同dp，用来设置字体
 * drawable-mdpi(dpi=160 density=1) drawable-xhdpi (dpi=320 density=2) drawable-xxhdpi (dpi=480 density=3)，资源紧张时可以考虑只用xhdpi，wrap_content，自动渲染
 * 另一个android屏幕适配方案，基准百分比的方式布局，google支持库android-percent-support-lib
+* 几种屏幕适配方案
+  * 通用方式是为每种dpi出一套图片资源，缺点增加设计工作量，使apk包变大
+  * 基于现在主流apk的分辨率，xhdpi（dpi=320））规格的图片成为首选，当资源紧张时考虑
+  * 根据设计图尺寸，将设计图上标识的px尺寸，转化为百分比，为所有主流屏幕生成对应百分比的值，每个尺寸都会有一个values文件夹。缺点产生大量文件夹，适配不了特殊尺寸。例如以480x320的分辨率为基准，将任何分辨率宽度分为320份，x1-x320，x1=1px，同理高度y1-y480，这样800x480的宽度x1=1.5px
+  * 使用Android百分比布局库（percent-support-lib)及其它类似实现
+* 几种Android UI布局优化，制作出高效且复用性高的UI
+  * 尽量多使用RelativeLayout和LinearLayout, 不要使用绝对布局AbsoluteLayout，在布局层次一样的情况下， 建议使用LinearLayout代替RelativeLayout, 因为LinearLayout性能要稍高一点，但往往RelativeLayout可以简单实现LinearLayout嵌套才能实现的布局
+  * 将可复用的组件抽取出来并通过include标签使用
+  * 使用ViewStub标签来加载一些不常用的布局，常用来引入那些默认不会显示，只在特殊情况下显示的布局，如进度布局、网络失败显示的刷新布局、信息出错出现的提示布局等
+  * 使用merge标签减少布局的嵌套层次，作用是合并UI布局，使用该标签能降低UI布局的嵌套层次
 
 -------
 
@@ -31,6 +41,7 @@
   * Handler的构造方法，会首先保存当前线程中的Looper实例，进而与MessageQueue实例相关联，Handler的sendMessage方法，会把msg的target属性赋值handler自身，放入MessageQueue中。在构造Handler时，我们会复写handleMessage方法，也就是msg.target.dispatchMessage(msg)最终会调用的方法。在Activity的启动过程中，会在当前的UI线程中调用Looper的prepare和loop方法
   * Handler的post(Runnable r)方法，r中可以更新UI，其实并没有创建什么线程，只是发送了一个message，r最为msg的callback属性回调。Message m = Message.obtain()
 * AsyncTask，轻量级的android异步类，内部是一个线程池，每个后台任务交给线程池中的线程去完成，抽象出了一个后台任务的5种状态，对应5个回调接口方便需求实现，线程池最多128个工作线程，5个核心工作线程。缺点：AsyncTask可能存在新开大量线程消耗系统资源和导致应用FC的风险，当线程池已满，缓冲队列已满时，再向线程提交任务会导致RejectedExecutionException。解决：由一个控制线程来处理AsyncTask的调用判断线程池是否满了，如果满了则线程睡眠否则请求AsyncTask继续处理
+* AsyncTask与Thread对比：如果是简单的操作UI或者耗时不多且较简单的任务，应该选用AsyncTask，如果用来处理数据不参与界面操作时，应该使用Thrad，为了方便管理大量繁重的Thread任务，应该引入线程池ThreadPoolExecutor，统一分配、调度、管理，
 
 -------
 
@@ -98,10 +109,8 @@
   * 子线程通过runOnUiThread更新，在非上下文类中，需要传递Activity对象
   * View.post(Runnable r)，需要传递更新的view过去
 * Android线程间通信，进程间通信
-  * AsyncTask， Handler，
-  * IPC机制Binder
-  * synchronized机制，当两个并发程序访问同一个object的synchronized(this)同步代码时，一个时间内只有一个线程得到执行，另一个线程必须等到当前线程执行完代码后才能执行
- 
+  * AsyncTask， Handler，synchronized机制，当两个并发程序访问同一个object的synchronized(this)同步代码时，一个时间内只有一个线程得到执行，另一个线程必须等到当前线程执行完代码后才能执行
+  * IPC机制Binder，通过AIDL（Android Interface Definition Language）接口文件
 -------
 
 * Android处理崩溃异常：
@@ -149,3 +158,26 @@
 * Context.MODE_PRIVATE: 默认操作模式，代表文件是私有数据，只能被应用本身访问，该模式下写入的内容会覆盖原有内容
 * Context.MODE_APPEND: 模式会检查文件是否存在，存在就往文件追加内容，否则就创建新文件
 * Context.MODE_WORLD_READABLE：表示当前文件可以被其他应用读取 MODE_WORLD_WRITEABLE：表示当前文件可以被其他应用写入
+
+-------
+
+* Android实现Tab类型的界面方式有如下几种：
+  * 传统的ViewPager实现
+  * FragmentManager+Fragment实现
+  * ViewPager+FragmentPagerAdapter实现
+  * TabPageIndicator+ViewPager+FragmentPagerAdapter实现
+* Fragment比Activity多了几个额外的生命周期，onAttach-->onCreate-->onCreateView-->onActivityCreated-->onStart-->onResume-->onPause-->onStop-->onDestoryView()-->onDestory-->onDetach，FragmentManager=getFragmentManager()，FragmentTransaction transaction=fm.benginTransatcion(), transaction.add/remove/replace/hide/show/commit/addToBackStack
+* Fragment与Activity通信
+  * 如果你Activity中包含自己管理的Fragment的引用，可以通过引用直接访问所有的Fragment的public方法
+  * 如果Activity中未保存任何Fragment的引用，那么没关系，每个Fragment都有一个唯一的TAG或者ID,可以通过getFragmentManager.findFragmentByTag()或者findFragmentById()获得任何Fragment实例，然后进行操作
+  * 在Fragment中可以通过getActivity得到当前绑定的Activity的实例，然后进行操作
+  * 声明接口，处理回调
+* 屏幕旋转时防止Fragment重叠，加入savedInstanceState==null判断即可
+
+-------
+
+* 提高Android程序运行效率的方法：
+  * 降低执行时间，使用缓存（图片，listview，网络，IO，layout）；优化数据存储，选择合适的数据类型和数据结构；算法优化；JNI（Java Native Interface）；逻辑优化
+  * 异步，利用多线程
+  * 提前或延迟操作
+  * 网络优化
