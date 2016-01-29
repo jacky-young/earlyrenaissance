@@ -24,11 +24,7 @@
   * 基于现在主流apk的分辨率，xhdpi（dpi=320））规格的图片成为首选，当资源紧张时考虑
   * 根据设计图尺寸，将设计图上标识的px尺寸，转化为百分比，为所有主流屏幕生成对应百分比的值，每个尺寸都会有一个values文件夹。缺点产生大量文件夹，适配不了特殊尺寸。例如以480x320的分辨率为基准，将任何分辨率宽度分为320份，x1-x320，x1=1px，同理高度y1-y480，这样800x480的宽度x1=1.5px
   * 使用Android百分比布局库（percent-support-lib)及其它类似实现
-* 几种Android UI布局优化，制作出高效且复用性高的UI
-  * 尽量多使用RelativeLayout和LinearLayout, 不要使用绝对布局AbsoluteLayout，在布局层次一样的情况下， 建议使用LinearLayout代替RelativeLayout, 因为LinearLayout性能要稍高一点，但往往RelativeLayout可以简单实现LinearLayout嵌套才能实现的布局
-  * 将可复用的组件抽取出来并通过include标签使用
-  * 使用ViewStub标签来加载一些不常用的布局，常用来引入那些默认不会显示，只在特殊情况下显示的布局，如进度布局、网络失败显示的刷新布局、信息出错出现的提示布局等
-  * 使用merge标签减少布局的嵌套层次，作用是合并UI布局，使用该标签能降低UI布局的嵌套层次
+* Android布局优化，目标高效且复用性高的UI，建议：尽量多使用RelativeLayout布局，减少嵌套复杂度；可复用的组件抽出用include标签；使用ViewStub标签加载一些不常用的布局，例如只有特殊情况下才显示的进度布局，网络失败刷新布局，信息出错的提示布局等；使用merge标签减少布局的嵌套层次，一是用于布局根节点是Framelayout，二是include时作为该布局的顶节点，这样引入时子节点就会自动合并到主布局
 
 -------
 
@@ -48,11 +44,6 @@
 * `Android单元测试``Android依赖管理``公共库选型(依赖注入，ORM，网络类)``渠道打包``开发效率`
   * Android Http请求API: JAVA的HttpURLConnection, Apache的HttpClient，2.3之后推荐使用前者，默认开启gzip，connection keepAlive
   * 第三方的Http网络库Volley，OKHttp，Retrofit，客户端与服务器交互的数据格式主流是json，推荐使用google-gson
-
--------
-
-* Android布局优化，目标高效且复用性高的UI，建议：尽量多使用RelativeLayout布局，减少嵌套复杂度；可复用的组件抽出用include标签；使用ViewStub标签加载一些不常用的布局，例如只有特殊情况下才显示的进度布局，网络失败刷新布局，信息出错的提示布局等；使用merge标签减少布局的嵌套层次，一是用于布局根节点是Framelayout，二是include时作为该布局的顶节点，这样引入时子节点就会自动合并到主布局
-
 
 -------
 
@@ -88,7 +79,8 @@
 
 -------
 
-* Android的数据存储：`Preference(通常是键值对)``文件(手机设备或外设存储，缺省只能由创建它的应用访问)``数据库(如SQLite方式，由创建的应访问)``网络(Android提供API远程在服务器上存储数据)`
+* Android的数据存储：`Preference(通常是键值对)``文件(手机设备或外设存储，缺省只能由创建它的应用访问)``数据库(如SQLite方式，由创建的应访问)``使用ContentProvider存储数据``网络(Android提供API远程在服务器上存储数据)`
+* 应用继承ContentProvider类，并重写该类用于提供数据和存储数据的方法，就可以向其它应用共享数据，cp共享数据的好处是统一了数据访问方式。Uri代表了要操作的数据，UriMatcher、ContentUrist用于操作Uri的工具, ContentResolver用于外部应用需要对cp中的数据进行添加、删除、修改和查询操作
 
 -------
 
@@ -111,6 +103,7 @@
 * Android线程间通信，进程间通信
   * AsyncTask， Handler，synchronized机制，当两个并发程序访问同一个object的synchronized(this)同步代码时，一个时间内只有一个线程得到执行，另一个线程必须等到当前线程执行完代码后才能执行
   * IPC机制Binder，通过AIDL（Android Interface Definition Language）接口文件
+
 -------
 
 * Android处理崩溃异常：
@@ -181,3 +174,9 @@
   * 异步，利用多线程
   * 提前或延迟操作
   * 网络优化
+* MVC（Model-View-Controller）模式优点：耦合性低，使View层和Model层很好的分离，达到解耦的目的；可扩展性好，方便添加新需求；职责划分明确，便于代码维护。在Android业务中，业务逻辑，数据处理担当Model层，界面显示代表View，Activity则起了中间桥梁的作用，例如ListAdapter-ListView-ListActivity
+* JNI（Java Native Interface）和NDK（Native Development Kit）：JNI是一套SUN的API，NDK是Google提供的一系列开发工具，帮助开发者快速开发C（或C++）的动态库，并能自动将so和java应用一起打包成apk
+
+--------
+
+* ScrollView嵌套ListView冲突问题：原因大概是scroll事件的消费处理以及ListView控件的高度设定问题。解决方案：1，ScrollView+LinearLayout+ListView可以换成ScrollView+LinearLayout+LinearLayout，适用于ScrollView所显示的内容肯定不会太多 2，ListView具有HeaderView与FooterView2部分，因此，在非下拉刷新，上拉加载的需求中，完全可以使用ListView来代替ScrollView 3，重写ListView onMeasure()方法
