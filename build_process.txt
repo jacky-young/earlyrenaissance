@@ -1,0 +1,78 @@
+Preparation Work:
+1. Maybe you need update your ubuntu system for surely
+  $ sudo apt-get update
+
+2. Install ant environment
+  downlad apache-ant-1.9.7-bin.tar.gz from http://ant.apache.org/bindownload.cgi
+  $ vi ~/.bashrc; export ANT_HOME=/home/jacky/Downloads/apache-ant-1.9.7
+  $ ant -version # to verify your installation
+
+3. Install java
+  download jdk-8u77-linux-x64.tar.gz from http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+  $ vi ~/.bashrc; export JAVA_HOME=/home/jacky/Downloads/jdk1.8.0_77 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar export PATH=$JAVA_HOME/bin:$PATH:$ANT_HOME/bin
+  $ java -version # to verify your installation
+
+4. Install node
+  $ sudo apt-get install build-essential # for node make command like g++
+  $ wget https://nodejs.org/download/release/v5.6.0/node-v5.6.0.tar.gz
+  $ tar xvf node-v5.6.0.tar.gz
+  $ cd node-v5.6.0
+  $ ./configure
+  $ make
+  $ make install
+  $ cp /usr/local/bin/node /usr/sbin/
+  $ node -v # to verify your installation
+
+5. Install gradle
+  $ wget https://services.gradle.org/distributions/gradle-2.12-all.zip
+  $ vi ~/.bashrc; export GRADLE_HOME=/home/jacky/Downloads/gradle-2.12 export PATH=$GRADLE_HOME/bin:$PATH
+  $ gradle -version # to verify your installation
+
+6. Install ruby & gem
+  $ sudo apt-get install ruby
+  $ wget https://rubygems.org/rubygems/rubygems-2.6.3.tgz
+  $ ruby setup.rb
+  $ ruby -v; gem -v # to verify your installation
+
+
+siovene/cordova-plugin-oic-demo build
+1. $ sudo npm install -g cordova grunt-cli bower # global npm packages
+  npm config set https-proxy "http://child-prc.intel.com:913/"
+  npm config set proxy "http://child-prc.intel.com:913/"
+  $ npm config list # to check your npm proxy
+
+2. Install sass
+  $ sudo gem install sass --http-proxy http://child-prc.intel.com:913/
+
+3. $ npm install # local npm packages
+
+4. $ bower install # client js repositories
+  config bower proxy
+  $ vi ~/.bowerrc # inset
+   {
+    "proxy" : "http://child-prc.intel.com:913/",
+    "https-proxy" : "http://child-prc.intel.com:913/",
+    "strict-ssl": false
+   }
+
+5. $ grunt platform:add:android # inits the platform and install plugins
+
+6. $ grunt run:android # builds, installs and runs on the connected device
+  config ~/.gradle/gradle.properties proxy
+  $ vi ~/.gradle/gradle.properties
+   systemProp.http.proxyHost=child-prc.intel.com
+   systemProp.http.proxyPort=913
+   systemProp.https.proxyHost=child-prc.intel.com
+   systemProp.https.proxyPort=913
+  $ sudo gem install compass --http-proxy http://child-prc.intel.com:913/
+
+  if you got error like this, reference will resolve:
+```
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':CordovaLib:processDebugResources'.
+> A problem occurred starting process 'command '/local/ADT/adt-bundle-linux-x86_64-20140702/sdk/build-tools/23.0.2/aapt''
+```
+  reference: http://stackoverflow.com/questions/35037373/error-java-io-ioexception-build-on-android-device-failed-at-task-processdebug
+  $ sudo apt-get install libgl1-mesa-dev:i386
