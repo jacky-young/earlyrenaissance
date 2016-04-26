@@ -1,0 +1,1466 @@
+
+Requirements
+In this document
+
+    Hardware requirements
+    Software requirements
+        Operating system
+        Java Development Kit (JDK)
+        Key packages
+
+Before you download and build the Android source, ensure your system meets the following requirements. Then see Establishing a Build Environment for installation instructions by operating system.
+Hardware requirements
+
+Your development workstation should meet or exceed these hardware requirements:
+
+    A 64-bit environment is required for Gingerbread (2.3.x) and newer versions, including the master branch. You can compile older versions on 32-bit systems.
+    At least 100GB of free disk space for a checkout, 150GB for a single build, and 200GB or more for multiple builds. If you employ ccache, you will need even more space.
+
+    If you are running Linux in a virtual machine, you need at least 16GB of RAM/swap.
+
+Software requirements
+
+The Android Open Source Project (AOSP) master branch is traditionally developed and tested on Ubuntu Long Term Support (LTS) releases, but other distributions may be used. See the list below for recommended versions.
+
+You workstation must have the software listed below. See Establishing a Build Environment for additional required packages and the commands to install them.
+Operating system
+
+Android is typically built with a Linux or Mac OS operating system. It is also possible to build Android in a virtual machine on unsupported systems such as Windows.
+Linux
+
+    Android 6.0 (Marshmallow) - AOSP master: Ubuntu 14.04 (Trusty)
+    Android 2.3.x (Gingerbread) - Android 5.x (Lollipop): Ubuntu 12.04 (Precise)
+    Android 1.5 (Cupcake) - Android 2.2.x (Froyo): Ubuntu 10.04 (Lucid)
+
+Mac OS (Intel/x86)
+
+    Android 6.0 (Marshmallow) - AOSP master: Mac OS v10.10 (Yosemite) or later with Xcode 4.5.2 and Command Line Tools
+    Android 5.x (Lollipop): Mac OS v10.8 (Mountain Lion) with Xcode 4.5.2 and Command Line Tools
+    Android 4.1.x-4.3.x (Jelly Bean) - Android 4.4.x (KitKat): Mac OS v10.6 (Snow Leopard) or Mac OS X v10.7 (Lion) and Xcode 4.2 (Apple's Developer Tools)
+    Android 1.5 (Cupcake) - Android 4.0.x (Ice Cream Sandwich): Mac OS v10.5 (Leopard) or Mac OS X v10.6 (Snow Leopard) and the Mac OS X v10.5 SDK
+
+Java Development Kit (JDK)
+
+Please note, since there are no available supported OpenJDK 8 packages for Ubuntu 14.04, the Ubuntu 15.04 packages must be installed manually. See JDK for Ubuntu LTS 14.04 for precise instructions.
+
+    The master branch of Android in AOSP: Ubuntu - OpenJDK 8, Mac OS - jdk 8u45 or newer
+    Android 5.x (Lollipop) - Android 6.0 (Marshmallow): Ubuntu - Java JDK 7, Mac OS - jdk-7u71-macosx-x64.dmg
+    Android 2.3.x (Gingerbread) - Android 4.4.x (KitKat): Ubuntu - Java JDK 6, Mac OS - Java JDK 6
+    Android 1.5 (Cupcake) - Android 2.2.x (Froyo): Ubuntu - Java JDK 5
+
+Key packages
+
+    Python 2.6 -- 2.7 from python.org
+    GNU Make 3.81 -- 3.82 from gnu.org; Android 3.2.x (Honeycomb) and earlier will need to revert from make 3.82 to avoid build errors
+    Git 1.7 or newer from git-scm.com
+
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+
+-------------------------------------------------------------------------------------------------------------
+
+
+Establishing a Build Environment
+In this document
+
+    Choosing a Branch
+    Setting up a Linux build environment
+        Installing the JDK
+        Installing required packages (Ubuntu 14.04)
+        Installing required packages (Ubuntu 12.04)
+        Installing required packages (Ubuntu 10.04 -- 11.10)
+        Configuring USB Access
+        Using a separate output directory
+    Setting up a Mac OS build environment
+        Creating a case-sensitive disk image
+        Installing the JDK
+    Optimizing a build environment (optional)
+        Setting up ccache
+    Next: Download the source
+
+This section describes how to set up your local work environment to build the Android source files. You will need to use Linux or Mac OS. Building under Windows is not currently supported.
+
+For an overview of the entire code-review and code-update process, see Life of a Patch.
+Choosing a Branch
+
+Some of the requirements for your build environment are determined by which version of the source code you plan to compile. See Build Numbers for a full listing of branches you may choose from. You may also choose to download and build the latest source code (called master), in which case you will simply omit the branch specification when you initialize the repository.
+
+Once you have selected a branch, follow the appropriate instructions below to set up your build environment.
+Setting up a Linux build environment
+
+These instructions apply to all branches, including master.
+
+The Android build is routinely tested in house on recent versions of Ubuntu LTS (14.04), but most distributions should have the required build tools available. Reports of successes or failures on other distributions are welcome.
+
+For Gingerbread (2.3.x) and newer versions, including the master branch, a 64-bit environment is required. Older versions can be compiled on 32-bit systems.
+
+Note: See the Requirements for the complete list of hardware and software requirements. Then follow the detailed instructions for Ubuntu and Mac OS below.
+Installing the JDK
+
+The master branch of Android in the Android Open Source Project (AOSP) requires Java 8. On Ubuntu, use OpenJDK.
+
+Java 8: For the latest version of Android
+For Ubuntu >= 15.04
+
+Run the following:
+
+$ sudo apt-get update
+$ sudo apt-get install openjdk-8-jdk
+
+For Ubuntu LTS 14.04
+
+There are no available supported OpenJDK 8 packages for Ubuntu 14.04. The Ubuntu 15.04 OpenJDK 8 packages have been used successfully with Ubuntu 14.04. Newer package versions (e.g. those for 15.10, 16.04) were found not to work on 14.04 using the instructions below.
+
+    Download the .deb packages for your architecture from http://archive.ubuntu.com/ubuntu/pool/universe/o/openjdk-8/:
+        openjdk-8-jre-headless
+        openjdk-8-jre
+        openjdk-8-jdk
+
+    Remember, you may obtain the architecture for your machine with:
+    $ uname -m
+
+    With x86_64 representing a 64-bit (amd64) Linux kernel architecture and i386/i486/i586/i686 representing a 32-bit (i386) system.
+
+    Optionally, confirm the checksums of the downloaded files using the information found on http://packages.ubuntu.com.
+
+    For example with the sha256sum tool:
+
+    $ sha256sum {package file}
+
+    Install the packages:
+
+    $ sudo apt-get update
+
+    Run dpkg for each of the .deb files you downloaded. It may produce errors due to missing dependencies:
+
+    $ sudo dpkg -i {downloaded.deb file}
+
+    To fix missing dependencies:
+
+    $ sudo apt-get -f install
+
+Update the default Java version - optional
+
+Optionally, for the Ubuntu versions above update the default Java version by running:
+
+$ sudo update-alternatives --config java
+$ sudo update-alternatives --config javac
+
+If, during a build, you encounter version errors for Java, set its path as described in the Wrong Java Version section.
+
+To develop older versions of Android, download and install the corresponding version of the Java JDK:
+Java 7: for Lollipop through Marshmallow
+Java 6: for Gingerbread through KitKat
+Java 5: for Cupcake through Froyo
+Installing required packages (Ubuntu 14.04)
+
+You will need a 64-bit version of Ubuntu. Ubuntu 14.04 is recommended.
+
+$ sudo apt-get install git-core gnupg flex bison gperf build-essential \
+  zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 \
+  lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache \
+  libgl1-mesa-dev libxml2-utils xsltproc unzip
+
+Note: To use SELinux tools for policy analysis, also install the python-networkx package.
+Installing required packages (Ubuntu 12.04)
+
+You may use Ubuntu 12.04 to build older versions of Android. Version 12.04 is not supported on master or recent releases.
+
+$ sudo apt-get install git gnupg flex bison gperf build-essential \
+  zip curl libc6-dev libncurses5-dev:i386 x11proto-core-dev \
+  libx11-dev:i386 libreadline6-dev:i386 libgl1-mesa-glx:i386 \
+  libgl1-mesa-dev g++-multilib mingw32 tofrodos \
+  python-markdown libxml2-utils xsltproc zlib1g-dev:i386
+$ sudo ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
+
+Installing required packages (Ubuntu 10.04 -- 11.10)
+
+Building on Ubuntu 10.04-11.10 is no longer supported, but may be useful for building older releases of AOSP.
+
+$ sudo apt-get install git gnupg flex bison gperf build-essential \
+  zip curl zlib1g-dev libc6-dev lib32ncurses5-dev ia32-libs \
+  x11proto-core-dev libx11-dev lib32readline5-dev lib32z-dev \
+  libgl1-mesa-dev g++-multilib mingw32 tofrodos python-markdown \
+  libxml2-utils xsltproc
+
+On Ubuntu 10.10:
+
+$ sudo ln -s /usr/lib32/mesa/libGL.so.1 /usr/lib32/mesa/libGL.so
+
+On Ubuntu 11.10:
+
+$ sudo apt-get install libx11-dev:i386
+
+Configuring USB Access
+
+Under GNU/Linux systems (and specifically under Ubuntu systems), regular users can't directly access USB devices by default. The system needs to be configured to allow such access.
+
+The recommended approach is to create a file at /etc/udev/rules.d/51-android.rules (as the root user).
+
+To do this, run the following command to download the 51-android.rules file attached to this site, modify it to include your username, and place it in the correct location:
+
+$ wget -S -O - http://source.android.com/source/51-android.rules | sed "s/<username>/$USER/" | sudo tee >/dev/null /etc/udev/rules.d/51-android.rules; sudo udevadm control --reload-rules
+
+Those new rules take effect the next time a device is plugged in. It might therefore be necessary to unplug the device and plug it back into the computer.
+
+This is known to work on both Ubuntu Hardy Heron (8.04.x LTS) and Lucid Lynx (10.04.x LTS). Other versions of Ubuntu or other variants of GNU/Linux might require different configurations.
+Using a separate output directory
+
+By default, the output of each build is stored in the out/ subdirectory of the matching source tree.
+
+On some machines with multiple storage devices, builds are faster when storing the source files and the output on separate volumes. For additional performance, the output can be stored on a filesystem optimized for speed instead of crash robustness, since all files can be re-generated in case of filesystem corruption.
+
+To set this up, export the OUT_DIR_COMMON_BASE variable to point to the location where your output directories will be stored.
+
+export OUT_DIR_COMMON_BASE=<path-to-your-out-directory>
+
+The output directory for each separate source tree will be named after the directory holding the source tree.
+
+For instance, if you have source trees as /source/master1 and /source/master2 and OUT_DIR_COMMON_BASE is set to /output, the output directories will be /output/master1 and /output/master2.
+
+It's important in that case to not have multiple source trees stored in directories that have the same name, as those would end up sharing an output directory, with unpredictable results.
+
+This is only supported on Jelly Bean (4.1) and newer, including the master branch.
+Setting up a Mac OS build environment
+
+In a default installation, Mac OS runs on a case-preserving but case-insensitive filesystem. This type of filesystem is not supported by git and will cause some git commands (such as git status) to behave abnormally. Because of this, we recommend that you always work with the AOSP source files on a case-sensitive filesystem. This can be done fairly easily using a disk image, discussed below.
+
+Once the proper filesystem is available, building the master branch in a modern Mac OS environment is very straightforward. Earlier branches, including ICS, require some additional tools and SDKs.
+Creating a case-sensitive disk image
+
+You can create a case-sensitive filesystem within your existing Mac OS environment using a disk image. To create the image, launch Disk Utility and select "New Image". A size of 25GB is the minimum to complete the build; larger numbers are more future-proof. Using sparse images saves space while allowing to grow later as the need arises. Be sure to select "case sensitive, journaled" as the volume format.
+
+You can also create it from a shell with the following command:
+
+# hdiutil create -type SPARSE -fs 'Case-sensitive Journaled HFS+' -size 40g ~/android.dmg
+
+This will create a .dmg (or possibly a .dmg.sparseimage) file which, once mounted, acts as a drive with the required formatting for Android development.
+
+If you need a larger volume later, you can also resize the sparse image with the following command:
+
+# hdiutil resize -size <new-size-you-want>g ~/android.dmg.sparseimage
+
+For a disk image named android.dmg stored in your home directory, you can add helper functions to your ~/.bash_profile:
+
+    To mount the image when you execute mountAndroid:
+
+    # mount the android file image
+    function mountAndroid { hdiutil attach ~/android.dmg -mountpoint /Volumes/android; }
+
+    Note: If your system created a .dmg.sparseimage file, replace ~/android.dmg with ~/android.dmg.sparseimage.
+
+    To unmount it when you execute umountAndroid:
+
+    # unmount the android file image
+    function umountAndroid() { hdiutil detach /Volumes/android; }
+
+Once you've mounted the android volume, you'll do all your work there. You can eject it (unmount it) just like you would with an external drive.
+Installing the JDK
+
+See Requirements for the version of Java to use when developing various versions of Android.
+Installing required packages
+
+    Install Xcode from the Apple developer site. If you are not already registered as an Apple developer, you will have to create an Apple ID in order to download.
+
+    Install MacPorts from macports.org.
+
+    Note: Make sure that /opt/local/bin appears in your path before /usr/bin. If not, please add the following to your ~/.bash_profile file:
+
+    export PATH=/opt/local/bin:$PATH
+
+    Note: If you do not have a .bash_profile file in your home directory, create one.
+
+    Get make, git, and GPG packages from MacPorts:
+
+    $ POSIXLY_CORRECT=1 sudo port install gmake libsdl git gnupg
+
+    If using Mac OS X v10.4, also install bison:
+
+    $ POSIXLY_CORRECT=1 sudo port install bison
+
+Reverting from make 3.82
+
+In Android 4.0.x (Ice Cream Sandwich) and earlier, a bug exists in gmake 3.82 that prevents android from building. You can install version 3.81 using MacPorts with these steps:
+
+    Edit /opt/local/etc/macports/sources.conf and add a line that says
+
+    file:///Users/Shared/dports
+
+    above the rsync line. Then create this directory:
+
+    $ mkdir /Users/Shared/dports
+
+    In the new dports directory, run
+
+    $ svn co --revision 50980 http://svn.macports.org/repository/macports/trunk/dports/devel/gmake/ devel/gmake/
+
+    Create a port index for your new local repository:
+
+    $ portindex /Users/Shared/dports
+
+    Finally, install the old version of gmake with
+
+    $ sudo port install gmake @3.81
+
+Setting a file descriptor limit
+
+On Mac OS, the default limit on the number of simultaneous file descriptors open is too low and a highly parallel build process may exceed this limit.
+
+To increase the cap, add the following lines to your ~/.bash_profile:
+
+# set the number of open files to be 1024
+ulimit -S -n 1024
+
+Optimizing a build environment (optional)
+
+Setting up ccache
+
+You can optionally tell the build to use the ccache compilation tool. Ccache acts as a compiler cache that can be used to speed up rebuilds. This works very well if you use make clean often, or if you frequently switch between different build products.
+
+Put the following in your .bashrc (or equivalent):
+
+export USE_CCACHE=1
+
+By default the cache will be stored in ~/.ccache. If your home directory is on NFS or some other non-local filesystem, you will want to specify the directory in your .bashrc file as well:
+
+export CCACHE_DIR=<path-to-your-cache-directory>
+
+The suggested cache size is 50-100GB. You will need to run the following command once you have downloaded the source code:
+
+prebuilts/misc/linux-x86/ccache/ccache -M 50G
+
+On Mac OS, you should replace linux-x86 with darwin-x86:
+
+prebuilts/misc/darwin-x86/ccache/ccache -M 50G
+
+When building Ice Cream Sandwich (4.0.x) or older, ccache is in a different location:
+
+prebuilt/linux-x86/ccache/ccache -M 50G
+
+This setting is stored in the CCACHE_DIR and is persistent.
+Next: Download the source
+
+Your build environment is good to go! Proceed to downloading the source.
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+------------------------------------------------------------------------------------------------------------
+
+
+Downloading the Source
+In this document
+
+    Installing Repo
+    Initializing a Repo client
+    Downloading the Android Source Tree
+    Using Authentication
+    Troubleshooting network issues
+    Using a local mirror
+    Verifying Git Tags
+
+The Android source tree is located in a Git repository hosted by Google. The Git repository includes metadata for the Android source, including those related to changes to the source and the date they were made. This document describes how to download the source tree for a specific Android code-line.
+Installing Repo
+
+Repo is a tool that makes it easier to work with Git in the context of Android. For more information about Repo, see the Developing section.
+
+To install Repo:
+
+    Make sure you have a bin/ directory in your home directory and that it is included in your path:
+
+    $ mkdir ~/bin
+    $ PATH=~/bin:$PATH
+
+    Download the Repo tool and ensure that it is executable:
+
+    $ curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+    $ chmod a+x ~/bin/repo
+
+For version 1.17, the SHA-1 checksum for repo is ddd79b6d5a7807e911b524cb223bc3544b661c28
+
+For version 1.19, the SHA-1 checksum for repo is 92cbad8c880f697b58ed83e348d06619f8098e6c
+
+For version 1.20, the SHA-1 checksum for repo is e197cb48ff4ddda4d11f23940d316e323b29671c
+
+For version 1.21, the SHA-1 checksum for repo is b8bd1804f432ecf1bab730949c82b93b0fc5fede
+
+For version 1.22, the SHA-1 checksum for repo is da0514e484f74648a890c0467d61ca415379f791
+Initializing a Repo client
+
+After installing Repo, set up your client to access the Android source repository:
+
+    Create an empty directory to hold your working files. If you're using MacOS, this has to be on a case-sensitive filesystem. Give it any name you like:
+
+    $ mkdir WORKING_DIRECTORY
+    $ cd WORKING_DIRECTORY
+
+    Configure git with your real name and email address. To use the Gerrit code-review tool, you will need an email address that is connected with a registered Google account. Make sure this is a live address at which you can receive messages. The name that you provide here will show up in attributions for your code submissions.
+
+    $ git config --global user.name "Your Name"
+    $ git config --global user.email "you@example.com"
+
+    Run repo init to bring down the latest version of Repo with all its most recent bug fixes. You must specify a URL for the manifest, which specifies where the various repositories included in the Android source will be placed within your working directory.
+
+    $ repo init -u https://android.googlesource.com/platform/manifest
+
+    To check out a branch other than "master", specify it with -b. For a list of branches, see Source Code Tags and Builds.
+
+    $ repo init -u https://android.googlesource.com/platform/manifest -b android-4.0.1_r1
+
+A successful initialization will end with a message stating that Repo is initialized in your working directory. Your client directory should now contain a .repo directory where files such as the manifest will be kept.
+Downloading the Android Source Tree
+
+To pull down the Android source tree to your working directory from the repositories as specified in the default manifest, run
+
+$ repo sync
+
+The Android source files will be located in your working directory under their project names. The initial sync operation will take an hour or more to complete. For more about repo sync and other Repo commands, see the Developing section.
+Using Authentication
+
+By default, access to the Android source code is anonymous. To protect the servers against excessive usage, each IP address is associated with a quota.
+
+When sharing an IP address with other users (e.g. when accessing the source repositories from beyond a NAT firewall), the quotas can trigger even for regular usage patterns (e.g. if many users sync new clients from the same IP address within a short period).
+
+In that case, it is possible to use authenticated access, which then uses a separate quota for each user, regardless of the IP address.
+
+The first step is to create a password with the password generator and follow the instructions on the password generator page.
+
+The second step is to force authenticated access, by using the following manifest URI: https://android.googlesource.com/a/platform/manifest. Notice how the /a/ directory prefix triggers mandatory authentication. You can convert an existing client to use mandatory authentication with the following command:
+
+$ repo init -u https://android.googlesource.com/a/platform/manifest
+
+Troubleshooting network issues
+
+When downloading from behind a proxy (which is common in some corporate environments), it might be necessary to explicitly specify the proxy that is then used by repo:
+
+$ export HTTP_PROXY=http://<proxy_user_id>:<proxy_password>@<proxy_server>:<proxy_port>
+$ export HTTPS_PROXY=http://<proxy_user_id>:<proxy_password>@<proxy_server>:<proxy_port>
+
+More rarely, Linux clients experience connectivity issues, getting stuck in the middle of downloads (typically during "Receiving objects"). It has been reported that tweaking the settings of the TCP/IP stack and using non-parallel commands can improve the situation. You need root access to modify the TCP setting:
+
+$ sudo sysctl -w net.ipv4.tcp_window_scaling=0
+$ repo sync -j1
+
+Using a local mirror
+
+When using several clients, especially in situations where bandwidth is scarce, it is better to create a local mirror of the entire server content, and to sync clients from that mirror (which requires no network access). The download for a full mirror is smaller than the download of two clients, while containing more information.
+
+These instructions assume that the mirror is created in /usr/local/aosp/mirror. The first step is to create and sync the mirror itself. Notice the --mirror flag, which can be specified only when creating a new client:
+
+$ mkdir -p /usr/local/aosp/mirror
+$ cd /usr/local/aosp/mirror
+$ repo init -u https://android.googlesource.com/mirror/manifest --mirror
+$ repo sync
+
+Once the mirror is synced, new clients can be created from it. Note that it's important to specify an absolute path:
+
+$ mkdir -p /usr/local/aosp/master
+$ cd /usr/local/aosp/master
+$ repo init -u /usr/local/aosp/mirror/platform/manifest.git
+$ repo sync
+
+Finally, to sync a client against the server, the mirror needs to be synced against the server, then the client against the mirror:
+
+$ cd /usr/local/aosp/mirror
+$ repo sync
+$ cd /usr/local/aosp/master
+$ repo sync
+
+It's possible to store the mirror on a LAN server and to access it over NFS, SSH or Git. It's also possible to store it on a removable drive and to pass that drive around between users or between machines.
+Verifying Git Tags
+
+Load the following public key into your GnuPG key database. The key is used to sign annotated tags that represent releases.
+
+$ gpg --import
+
+Copy and paste the key(s) below, then enter EOF (Ctrl-D) to end the input and process the keys.
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
+
+mQGiBEnnWD4RBACt9/h4v9xnnGDou13y3dvOx6/t43LPPIxeJ8eX9WB+8LLuROSV
+lFhpHawsVAcFlmi7f7jdSRF+OvtZL9ShPKdLfwBJMNkU66/TZmPewS4m782ndtw7
+8tR1cXb197Ob8kOfQB3A9yk2XZ4ei4ZC3i6wVdqHLRxABdncwu5hOF9KXwCgkxMD
+u4PVgChaAJzTYJ1EG+UYBIUEAJmfearb0qRAN7dEoff0FeXsEaUA6U90sEoVks0Z
+wNj96SA8BL+a1OoEUUfpMhiHyLuQSftxisJxTh+2QclzDviDyaTrkANjdYY7p2cq
+/HMdOY7LJlHaqtXmZxXjjtw5Uc2QG8UY8aziU3IE9nTjSwCXeJnuyvoizl9/I1S5
+jU5SA/9WwIps4SC84ielIXiGWEqq6i6/sk4I9q1YemZF2XVVKnmI1F4iCMtNKsR4
+MGSa1gA8s4iQbsKNWPgp7M3a51JCVCu6l/8zTpA+uUGapw4tWCp4o0dpIvDPBEa9
+b/aF/ygcR8mh5hgUfpF9IpXdknOsbKCvM9lSSfRciETykZc4wrRCVGhlIEFuZHJv
+aWQgT3BlbiBTb3VyY2UgUHJvamVjdCA8aW5pdGlhbC1jb250cmlidXRpb25AYW5k
+cm9pZC5jb20+iGAEExECACAFAknnWD4CGwMGCwkIBwMCBBUCCAMEFgIDAQIeAQIX
+gAAKCRDorT+BmrEOeNr+AJ42Xy6tEW7r3KzrJxnRX8mij9z8tgCdFfQYiHpYngkI
+2t09Ed+9Bm4gmEO5Ag0ESedYRBAIAKVW1JcMBWvV/0Bo9WiByJ9WJ5swMN36/vAl
+QN4mWRhfzDOk/Rosdb0csAO/l8Kz0gKQPOfObtyYjvI8JMC3rmi+LIvSUT9806Up
+hisyEmmHv6U8gUb/xHLIanXGxwhYzjgeuAXVCsv+EvoPIHbY4L/KvP5x+oCJIDbk
+C2b1TvVk9PryzmE4BPIQL/NtgR1oLWm/uWR9zRUFtBnE411aMAN3qnAHBBMZzKMX
+LWBGWE0znfRrnczI5p49i2YZJAjyX1P2WzmScK49CV82dzLo71MnrF6fj+Udtb5+
+OgTg7Cow+8PRaTkJEW5Y2JIZpnRUq0CYxAmHYX79EMKHDSThf/8AAwUIAJPWsB/M
+pK+KMs/s3r6nJrnYLTfdZhtmQXimpoDMJg1zxmL8UfNUKiQZ6esoAWtDgpqt7Y7s
+KZ8laHRARonte394hidZzM5nb6hQvpPjt2OlPRsyqVxw4c/KsjADtAuKW9/d8phb
+N8bTyOJo856qg4oOEzKG9eeF7oaZTYBy33BTL0408sEBxiMior6b8LrZrAhkqDjA
+vUXRwm/fFKgpsOysxC6xi553CxBUCH2omNV6Ka1LNMwzSp9ILz8jEGqmUtkBszwo
+G1S8fXgE0Lq3cdDM/GJ4QXP/p6LiwNF99faDMTV3+2SAOGvytOX6KjKVzKOSsfJQ
+hN0DlsIw8hqJc0WISQQYEQIACQUCSedYRAIbDAAKCRDorT+BmrEOeCUOAJ9qmR0l
+EXzeoxcdoafxqf6gZlJZlACgkWF7wi2YLW3Oa+jv2QSTlrx4KLM=
+=Wi5D
+-----END PGP PUBLIC KEY BLOCK-----
+
+After importing the keys, you can verify any tag with
+
+$ git tag -v TAG_NAME
+
+If you haven't set up ccache yet, now would be a good time to do it.
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+------------------------------------------------------------------------------------------------------------
+
+
+Building the System
+In this document
+
+    Set up environment
+    Choose a Target
+    Build the code
+    Run It!
+        Flash a Device
+        Emulate an Android Device
+    Using ccache
+    Troubleshooting Common Build Errors
+        Wrong Java Version
+        Python Version 3
+        Case Insensitive Filesystem
+        No USB Permission
+
+The following instructions to build the Android source tree apply to all branches, including master. The basic sequence of build commands is as follows:
+
+Note: If you're building Android 6.0 or later, please see Compiling with Jack for information on this new default toolchain.
+Set up environment
+
+Initialize the environment with the envsetup.sh script. Note that replacing source with . (a single dot) saves a few characters, and the short form is more commonly used in documentation.
+
+$ source build/envsetup.sh
+
+or
+
+$ . build/envsetup.sh
+
+Choose a Target
+
+Choose which target to build with lunch. The exact configuration can be passed as an argument. For example, the following command:
+
+$ lunch aosp_arm-eng
+
+refers to a complete build for the emulator, with all debugging enabled.
+
+If run with no arguments lunch will prompt you to choose a target from the menu.
+
+All build targets take the form BUILD-BUILDTYPE, where the BUILD is a codename referring to the particular feature combination.
+
+The BUILDTYPE is one of the following:
+Buildtype   Use
+user    limited access; suited for production
+userdebug   like "user" but with root access and debuggability; preferred for debugging
+eng     development configuration with additional debugging tools
+
+For more information about building for and running on actual hardware, see Running Builds.
+Build the code
+
+Build everything with make. GNU make can handle parallel tasks with a -jN argument, and it's common to use a number of tasks N that's between 1 and 2 times the number of hardware threads on the computer being used for the build. For example, on a dual-E5520 machine (2 CPUs, 4 cores per CPU, 2 threads per core), the fastest builds are made with commands between make -j16 and make -j32.
+
+$ make -j4
+
+Run It!
+
+You can either run your build on an emulator or flash it on a device. Please note that you have already selected your build target with lunch, and it is unlikely at best to run on a different target than it was built for.
+Flash a Device
+
+To flash a device, you will need to use fastboot, which should be included in your path after a successful build. Place the device in fastboot mode either manually by holding the appropriate key combination at boot, or from the shell with
+
+$ adb reboot bootloader
+
+Once the device is in fastboot mode, run
+
+$ fastboot flashall -w
+
+The -w option wipes the /data partition on the device; this is useful for your first time flashing a particular device but is otherwise unnecessary.
+
+For more information about building for and running on actual hardware, see Running Builds.
+Emulate an Android Device
+
+The emulator is added to your path automatically by the build process. To run the emulator, type
+
+$ emulator
+
+Using ccache
+
+ccache is a compiler cache for C and C++ that can help make builds faster. In the root of the source tree, do the following:
+
+$ export USE_CCACHE=1
+$ export CCACHE_DIR=/<path_of_your_choice>/.ccache
+$ prebuilts/misc/linux-x86/ccache/ccache -M 50G
+
+The suggested cache size is 50-100G.
+
+On Linux, you can watch ccache being used by doing the following:
+
+$ watch -n1 -d prebuilts/misc/linux-x86/ccache/ccache -s
+
+On Mac OS, you should replace linux-x86 with darwin-x86.
+
+When using Ice Cream Sandwich (4.0.x) or older, you should replace prebuilts/misc with prebuilt.
+Troubleshooting Common Build Errors
+Wrong Java Version
+
+If you are attempting to build a version of Android inconsistent with your version of Java, make will abort with a message such as
+
+************************************************************
+You are attempting to build with the incorrect version
+of java.
+
+Your version is: WRONG_VERSION.
+The correct version is: RIGHT_VERSION.
+
+Please follow the machine setup instructions at
+    https://source.android.com/source/download.html
+************************************************************
+
+This may be caused by:
+
+    Failing to install the correct JDK as specified in Initializing the Build Environment.
+
+    Another JDK previously installed appearing in your path. Prepend the correct JDK to the beginning of your PATH or remove the problematic JDK.
+
+Python Version 3
+
+Repo is built on particular functionality from Python 2.x and is unfortunately incompatible with Python 3. In order to use repo, please install Python 2.x:
+
+$ apt-get install python
+
+Case Insensitive Filesystem
+
+If you are building on an HFS filesystem on Mac OS, you may encounter an error such as
+
+************************************************************
+You are building on a case-insensitive filesystem.
+Please move your source tree to a case-sensitive filesystem.
+************************************************************
+
+Please follow the instructions in Initializing the Build Environment for creating a case-sensitive disk image.
+No USB Permission
+
+On most Linux systems, unprivileged users cannot access USB ports by default. If you see a permission denied error, follow the instructions Initializing the Build Environment for configuring USB access.
+
+If adb was already running and cannot connect to the device after getting those rules set up, it can be killed with adb kill-server. That will cause adb to restart with the new configuration.
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+
+------------------------------------------------------------------------------------------------------------
+
+
+
+Jack (Java Android Compiler Kit)
+In this document
+
+    The Jack toolchain
+    The .jack library format
+    Jack Intermediate Library Linker (Jill)
+    Using Jack in your Android build
+        $HOME/.jack file
+        Jack troubleshooting
+        Jack limitations
+    Using Jack features
+        Predexing
+        Incremental compilation
+        Shrinking and Obfuscation
+        Repackaging
+        Multidex support
+
+The Jack toolchain
+
+Jack (Java Android Compiler Kit) is a new Android toolchain that compiles Java source into Android dex bytecode. It replaces the previous Android toolchain, which consists of multiple tools, such as javac, ProGuard, jarjar, and dx.
+
+The Jack toolchain provides the following advantages:
+
+    Completely open source
+    Available in AOSP; partners are welcome to contribute.
+    Speeds compilation time
+    Jack has specific supports to reduce compilation time: pre-dexing, incremental compilation and a Jack compilation server.
+    Handles shrinking, obfuscation, repackaging and multidex
+    Using a separate package such as ProGuard is no longer necessary.
+
+Jack overview
+
+Figure 1. Jack (Java Android Compiler Kit)
+The .jack library format
+
+Jack has its own .jack file format, which contains the pre-compiled dex code for the library, allowing for faster compilation (pre-dex).
+Jack library file contents
+
+Figure 2. Jack library file contents
+Jack Intermediate Library Linker (Jill)
+
+The Jill tool translates the existing .jar libraries into the new library format, as shown below.
+Importing existing .jar libraries using Jill
+
+Figure 3. Workflow to import an existing .jar library
+Using Jack in your Android build
+
+You don’t have to do anything differently to use Jack — just use your standard makefile commands to compile the tree or your project. Jack is the default Android build toolchain for M.
+
+The first time Jack is used, it launches a local Jack compilation server on your computer:
+
+    This server brings an intrinsic speedup, because it avoids launching a new host JRE JVM, loading Jack code, initializing Jack and warming up the JIT at each compilation. It also provides very good compilation times during small compilations (e.g. in incremental mode).
+    The server is also a short-term solution to control the number of parallel Jack compilations, and so to avoid overloading your computer (memory or disk issue), because it limits the number of parallel compilations.
+
+The Jack server shuts itself down after an idle time without any compilation. It uses two TCP ports on the localhost interface, and so is not available externally. All these parameters (number of parallel compilations, timeout, ports number, etc) can be modified by editing the $HOME/.jack file.
+$HOME/.jack file
+
+The $HOME/.jack file contains settings for Jack server variables, in a full bash syntax.
+
+Here are the available settings, with their definitions and default values:
+
+    SERVER=true Enable the server feature of Jack.
+    SERVER_PORT_SERVICE=8072 Set the TCP port number of the server for compilation purposes.
+    SERVER_PORT_ADMIN=8073 Set the TCP port number of the server for admin purposes.
+    SERVER_COUNT=1 Unused at present.
+    SERVER_NB_COMPILE=4 Maximum number of parallel compilations allowed.
+    SERVER_TIMEOUT=60 Number of idle seconds the server has to wait without any compilation before shutting itself down.
+    SERVER_LOG=${SERVER_LOG:=$SERVER_DIR/jack-$SERVER_PORT_SERVICE.log} File where server logs are written. By default, this variable can be overloaded by an environment variable.
+    JACK_VM_COMMAND=${JACK_VM_COMMAND:=java} The default command used to launch a JVM on the host. By default, this variable can be overloaded by environment variable.
+
+Jack troubleshooting
+
+If your computer becomes unresponsive during compilation or if you experience Jack compilations failing on “Out of memory error”
+
+You can improve the situation by reducing the number of Jack simultaneous compilations by editing your $HOME/.jack and changing SERVER_NB_COMPILE to a lower value.
+
+If your compilations are failing on “Cannot launch background server”
+
+The most likely cause is TCP ports are already used on your computer. Try to change it by editing your $HOME/.jack (SERVER_PORT_SERVICE and SERVER_PORT_ADMIN variables).
+
+If it doesn’t solve the problem, please report and attach your compilation log and the Jack server log (see ‘Finding the Jack log’ below to know where to find the server log file). To unblock the situation, disable jack compilation server by editing your $HOME/.jack and changing SERVER to false. Unfortunately this will significantly slow down your compilation and may force you to launch make -j with load control (option "-l" of make).
+
+If your compilation gets stuck without any progress
+
+Please report this and give us the following additional information (where possible):
+
+    The command line at which you are stuck.
+    The output of this command line.
+    The result of executing jack-admin server-stat.
+    The $HOME/.jack file.
+    The content of the server log with the server state dumped. To get this —
+        Find the Jack background server process by running jack-admin list-server.
+        Send a kill -3 command to this server to dump its state into the log file.
+        To locate the server log file, see ‘Finding the Jack log’ below.
+    The result of executing ls -lR $TMPDIR/jack-$USER.
+    The result of running ps j -U $USER.
+
+You should be able to unblock yourself by killing the Jack background server (use jack-admin kill-server), and then by removing its temporary directories contained in jack-$USER of your temporary directory (/tmp or $TMPDIR).
+
+If you have any other issues
+
+To report bugs or request features, please use our public issue tracker, available at http://b.android.com, with the Jack tool bug report or Jack tool feature request templates. Please attach the Jack log to the bug report.
+Finding the Jack log
+
+    If you ran a make command with a dist target, the Jack log is located at $ANDROID_BUILD_TOP/out/dist/logs/jack-server.log
+    Otherwise you can find it in by running jack-admin server-log
+
+In case of reproducible Jack failures, you can get a more detailed log by setting one variable, as follows:
+
+$ export ANDROID_JACK_EXTRA_ARGS= "--verbose debug --sanity-checks on -D
+sched.runner=single-threaded"
+
+Then use your standard makefile commands to compile the tree or your project and attach its standard output and error.
+
+To remove detailed build logs use:
+
+$ unset ANDROID_JACK_EXTRA_ARGS
+
+Jack limitations
+
+    The Jack server is mono-user by default, so can be only used by one user on a computer. If it is not the case, please, choose different port numbers for each user and adjust SERVER_NB_COMPILE accordingly. You can also disable the Jack server by setting SERVER=false in your $HOME/.jack.
+    CTS compilation is slow due to current vm-tests-tf integration.
+    Bytecode manipulation tools, like JaCoCo, are not supported.
+
+Using Jack features
+
+Jack supports Java programming language 1.7 and integrates additional features described below.
+Predexing
+
+When generating a JACK library file, the .dex of the library is generated and stored inside the .jack library file as a pre-dex. When compiling, JACK reuses the pre-dex from each library.
+
+All libraries are pre-dexed.
+Jack libraries with pre-dex
+
+Figure 4. Jack libraries with pre-dex
+Limitations
+
+Currently, JACK does not reuse the library pre-dex if shrinking/obfuscation/repackaging is used in the compilation.
+Incremental compilation
+
+Incremental compilation means that only components that were touched since the last compilation, and their dependencies, are recompiled. Incremental compilation can be significantly faster than a full compilation when changes are limited to only a limited set of components.
+Limitations
+
+Incremental compilation is deactivated when shrinking, obfuscation, repackaging or multi-dex legacy is enabled.
+Enabling incremental builds
+
+Currently incremental compilation is not enabled by default. To enable incremental builds, add the following line to the Android.mk file of the project that you want to build incrementally:
+
+LOCAL_JACK_ENABLED := incremental
+
+Note: The first time that you build your project with Jack if some dependencies are not built, use mma to build them, and after that you can use the standard build command.
+Shrinking and Obfuscation
+
+JACK has shrinking and obfuscation support and uses proguard configuration files to enable shrinking and obfuscation features. Here are the supported and ignored options:
+Supported common options
+
+Common options include the following:
+
+    @
+    -include
+    -basedirectory
+    -injars
+    -outjars // only 1 output jar supported
+    -libraryjars
+    -keep
+    -keepclassmembers
+    -keepclasseswithmembers
+    -keepnames
+    -keepclassmembernames
+    -keepclasseswithmembernames
+    -printseeds
+
+Supported shrinking options
+
+Shrinking options include the following:
+
+    -dontshrink
+
+Supported obfuscation options
+
+Obfuscation options include the following:
+
+    -dontobfuscate
+    -printmapping
+    -applymapping
+    -obfuscationdictionary
+    -classobfuscationdictionary
+    -packageobfuscationdictionary
+    -useuniqueclassmembernames
+    -dontusemixedcaseclassnames
+    -keeppackagenames
+    -flattenpackagehierarchy
+    -repackageclasses
+    -keepattributes
+    -adaptclassstrings
+
+Ignored options
+
+Ignored options include the following:
+
+    -dontoptimize // Jack does not optimize
+    -dontpreverify // Jack does not preverify
+    -skipnonpubliclibraryclasses
+    -dontskipnonpubliclibraryclasses
+    -dontskipnonpubliclibraryclassmembers
+    -keepdirectories
+    -target
+    -forceprocessing
+    -printusage
+    -whyareyoukeeping
+    -optimizations
+    -optimizationpasses
+    -assumenosideeffects
+    -allowaccessmodification
+    -mergeinterfacesaggressively
+    -overloadaggressively
+    -microedition
+    -verbose
+    -dontnote
+    -dontwarn
+    -ignorewarnings
+    -printconfiguration
+    -dump
+
+Note: Other options will generate an error.
+Repackaging
+
+JACK uses jarjar configuration files to do the repackaging.
+
+Note: JACK is compatible with "rule" rule types, but is not compatible with "zap" or "keep" rule types. If you need "zap" or "keep" rule types please file a feature request with a description of how you use the feature in your app.
+Multidex support
+
+Since dex files are limited to 65K methods, apps with over 65K methods must be split into multiple dex files. (See ‘Building Apps with Over 65K Methods’ for more information about multidex.)
+
+Jack offers native and legacy multidex support.
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+------------------------------------------------------------------------------------------------------------
+
+
+Selecting Devices
+In this document
+
+    HiKey boards
+    Running Android on HiKey
+        Compiling userspace
+        Installing initial fastboot and ptable
+        Flashing images
+        Building the kernel
+        Setting monitor resolution
+        Configuring kernel serial output (uart3)
+
+You can create builds for Nexus devices using Android Open Source Project (AOSP) builds and the relevant hardware-specific binaries. For available Android builds and targeted Nexus devices, see Source Code, Tags, and Builds.
+
+Note: Due to hardware differences, do not use Android 4.1.1 on a Nexus 7 originally sold with Android 4.1.2 or newer.
+
+You can also create builds for the HiKey Android reference board (described below). Reference boards are designed to help non-Nexus component vendors develop and port drivers to Android releases. Using a reference board can ease upgrade efforts, reduce time-to-market for new Android devices, lower device costs by enabling ODM/OEMs to choose from a wider range of compatible components, and increase the speed of innovation among component suppliers.
+HiKey boards
+
+Google supports HiKey, a certified 96Board, as an Android reference board. AOSP provides kernel source and board support for HiKey to enable developers to easily create and debug new and existing peripheral drivers, do kernel development, and perform other tasks with fewer OEM encumbrances.
+
+HiKey boards are available in 1GB RAM and 2GB RAM configurations from Lenovator:
+HiKey board image
+
+Figure 1. HiKey board by Lenovator
+
+Additional resources:
+
+    HiKey schematics
+    HiKey User Guide
+    HiKey wiki
+
+Running Android on HiKey
+
+Use the following commands to download, build, and run Android on a HiKey board.
+Compiling userspace
+
+    Download the Android source tree:
+
+    $ repo init -u https://android.googlesource.com/platform/manifest -b master
+
+    $ repo sync -j24
+
+    Download and extract HDMI binaries into the Android source tree:
+
+    $ wget https://dl.google.com/dl/android/aosp/linaro-hikey-20160226-67c37b1a.tgz
+
+    $ tar xzf linaro-hikey-20160226-67c37b1a.tgz
+
+    $ ./extract-linaro-hikey.sh
+
+    Install mcopy utility:
+
+    $ apt-get install mtools
+
+    Build:
+
+    $ . ./build/envsetup.sh
+
+    $ lunch hikey-userdebug
+
+    $ make -j32
+
+Note: For 4GB eMMC, instead of $ make -j32 use: $ make -j32 TARGET_USERDATAIMAGE_4GB=true.
+Installing initial fastboot and ptable
+
+    Select special bootloader mode by linking J15 1-2 and 3-4 pins (for details, refer to the HiKey User Guide).
+    Connect USB to PC to get ttyUSB device (ex: /dev/ttyUSB1).
+    Power the board:
+
+    $ cd device/linaro/hikey/installer
+
+    $ ./flash-all.sh /dev/ttyUSB1 [4g]
+
+    Remove jumper 3-4 and power the board.
+
+Flashing images
+
+    Enter fastboot mode by linking J15 1-2 and 5-6 pins.
+    Run the following commands:
+
+    $ fastboot flash boot out/target/product/hikey/boot_fat.uefi.img
+
+    $ fastboot flash -w system out/target/product/hikey/system.img
+
+    Remove jumper 5-6 and power the board.
+
+Building the kernel
+
+    Run the following commands:
+
+    $ git clone https://android.googlesource.com/kernel/hikey-linaro
+
+    $ cd hikey-linaro
+
+    $ git checkout -b android-hikey-linaro-4.1 origin/android-hikey-linaro-4.1
+
+    $ make ARCH=arm64 hikey_defconfig
+
+    $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-android- -j24
+
+    Copy output to the hikey kernel directory (/kernel/hikey-linaro):
+        Copy hi6220-hikey.dtb (arch/arm64/boot/dts/hisilicon/hi6220-hikey.dtb) to the hikey-kernel directory.
+        Copy the Image directory (arch/arm64/boot/Image) to the hikey-kernel directory.
+
+Setting monitor resolution
+
+Edit device/linaro/hikey/bootloader/EFI/BOOT/grub.cfg and configure the video setting. Example setting for a 24" monitor: video=HDMI-A-1:1280x800@60.
+Configuring kernel serial output (uart3)
+
+Set the J2 low speed expansion connector to 1 - Gnd, 11 - Rx, 13 - Tx . For details, refer to the HiKey User Guide).
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+-----------------------------------------------------------------------------------------------------------
+
+
+Running Builds
+In this document
+
+    Building fastboot and adb
+    Booting into fastboot mode
+    Unlocking the bootloader
+    Obtaining proprietary binaries
+        Downloading proprietary binaries
+        Extracting proprietary binaries
+        Cleaning up
+    Selecting a device build
+    Flashing a device
+    Restoring devices to factory state
+
+This page provides details for running builds on specific devices and is designed to complement the information in Building the System.
+Building fastboot and adb
+
+If you don't already have fastboot and adb, you can build them with the regular build system. Use the instructions in Building a System and replace the main make command with:
+
+$ make fastboot adb
+
+Booting into fastboot mode
+
+During a cold boot of a device, use the following key combinations to boot into fastboot mode, which is a mode in the bootloader that can be used to flash the device:
+Device  Keys
+hikey   Link pins 1 - 2 and 5 - 6 of J15
+angler  Press and hold Volume Down, then press and hold Power
+bullhead    Press and hold Volume Down, then press and hold Power
+shamu   Press and hold Volume Down, then press and hold Power
+fugu    Press and hold Power
+volantis    Press and hold Volume Down, then press and hold Power
+hammerhead  Press and hold both Volume Up and Volume Down, then press and hold Power
+flo     Press and hold Volume Down, then press and hold Power
+deb     Press and hold Volume Down, then press and hold Power
+manta   Press and hold both Volume Up and Volume Down, then press and hold Power
+mako    Press and hold Volume Down, then press and hold Power
+grouper     Press and hold Volume Down, then press and hold Power
+tilapia     Press and hold Volume Down, then press and hold Power
+phantasm    Power the device, cover it with one hand after the LEDs light up and until they turn red
+maguro  Press and hold both Volume Up and Volume Down, then press and hold Power
+toro    Press and hold both Volume Up and Volume Down, then press and hold Power
+toroplus    Press and hold both Volume Up and Volume Down, then press and hold Power
+panda   Press and hold Input, then press Power
+wingray     Press and hold Volume Down, then press and hold Power
+crespo  Press and hold Volume Up, then press and hold Power
+crespo4g    Press and hold Volume Up, then press and hold Power
+
+You can also use the command adb reboot bootloader to reboot from Android directly into the bootloader with no key combinations.
+Unlocking the bootloader
+
+It's possible to flash a custom system only if the bootloader allows it, and the bootloader is locked by default. You can unlock the bootloader, but be aware that doing so deletes the user data for privacy reasons (the unlock operation needs to run only once). After unlocking, all data on the device is erased, i.e. both the applications' private data and the shared data that is accessible over USB, including photos and movies. Be sure to back up any precious files before unlocking the bootloader.
+
+With the device in fastboot mode, unlock the bootloader using:
+
+$ fastboot oem unlock
+
+The procedure must be confirmed on-screen.
+
+On Nexus 10, after unlocking the bootloader, the internal storage remains unformatted. You can format the device using:
+
+$ fastboot format cache
+$ fastboot format userdata
+
+To re-lock the bootloader, use:
+
+$ fastboot oem lock
+
+Note: Re-locking the bootloading on a Motoroal Xoom erases user data (including the shared USB data).
+Obtaining proprietary binaries
+
+AOSP cannot be used from pure source code only and requires additional hardware-related proprietary libraries to run, specifically for hardware graphics acceleration.
+Downloading proprietary binaries
+
+You can download official binaries for the supported devices running tagged AOSP release branches from Google's Nexus driver page. These binaries add access to additional hardware capabilities with non-open source code. To instead build the AOSP master branch, use the Binaries Preview for Nexus Devices. When building the master branch for a device, use the binaries for the most recent numbered release or with the most recent date.
+Extracting proprietary binaries
+
+Each set of binaries comes as a self-extracting script in a compressed archive. Uncompress each archive, run the included self-extracting script from the root of the source tree, then confirm that you agree to the terms of the enclosed license agreement. The binaries and their matching makefiles will be installed in the vendor/ hierarchy of the source tree.
+Cleaning up
+
+To ensure the newly installed binaries are properly taken into account after being extracted, delete the existing output of any previous build using:
+
+$ make clobber
+
+Selecting a device build
+
+The recommended builds for devices are available from the lunch menu, accessed when running the lunch command with no arguments. You can download factory images and binaries for Nexus devices from:
+
+    https://developers.google.com/android/nexus/images
+    https://developers.google.com/android/nexus/drivers
+
+Device  Code name   Build configuration
+HiKey   hikey   hikey-userdebug
+Nexus 6P    angler  aosp_angler-userdebug
+Nexus 5X    bullhead    aosp_bullhead-userdebug
+Nexus 6     shamu   aosp_shamu-userdebug
+Nexus Player    fugu    aosp_fugu-userdebug
+Nexus 9     volantis (flounder)     aosp_flounder-userdebug
+Nexus 5 (GSM/LTE)   hammerhead  aosp_hammerhead-userdebug
+Nexus 7 (Wi-Fi)     razor (flo)     aosp_flo-userdebug
+Nexus 7 (Mobile)    razorg (deb)    aosp_deb-userdebug
+Nexus 10    mantaray (manta)    full_manta-userdebug
+Nexus 4     occam (mako)    full_mako-userdebug
+Nexus 7 (Wi-Fi)     nakasi (grouper)    full_grouper-userdebug
+Nexus 7 (Mobile)    nakasig (tilapia)   full_tilapia-userdebug
+Galaxy Nexus (GSM/HSPA+)    yakju (maguro)  full_maguro-userdebug
+Galaxy Nexus (Verizon)  mysid (toro)    aosp_toro-userdebug
+Galaxy Nexus (Experimental)     mysidspr (toroplus)     aosp_toroplus-userdebug
+PandaBoard (Archived)   panda   aosp_panda-userdebug
+Motorola Xoom (U.S. Wi-Fi)  wingray     full_wingray-userdebug
+Nexus S     soju (crespo)   full_crespo-userdebug
+Nexus S 4G  sojus (crespo4g)    full_crespo4g-userdebug
+
+Note: Do not use Android 4.1.1 on a Nexus 7 originally sold with Android 4.1.2 or newer.
+Flashing a device
+
+You can flash an entire Android system in a single command; doing so verifies the system being flashed is compatible with the installed bootloader and radio, writes the boot, recovery, and system partitions together, and then reboots the system. Flashing also erases all user data, similarly to fastboot oem unlock.
+
+To flash a device, set the device in fastboot mode (if necessary) and run:
+
+$ fastboot -w flashall
+
+Note: Filesystems created via fastboot on Motorola Xoom do not function optimally. We recommend re-creating filesystems through recovery, using: $ adb reboot recovery. While in recovery, open the menu (press Power + Volume Up), wipe the cache partition, then wipe data.
+Restoring devices to factory state
+
+Factory images for Nexus 5, Nexus 10, Nexus 4, Nexus Q, Nexus 7, Galaxy Nexus (GSM/HSPA+ "yakju" and "takju", and CDMA/LTE "mysid" and "mysidspr"), Nexus S, and Nexus S 4G are available from Google's factory image page.
+
+Factory images for the Motorola Xoom are distributed directly by Motorola.
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+-----------------------------------------------------------------------------------------------------------
+
+
+
+Building Kernels
+In this document
+
+    Selecting a kernel
+    Identifying kernel version
+    Downloading sources
+    Downloading a prebuilt gcc
+    Building the kernel
+
+This page details how to build only the kernel. The following instructions assume you have not downloaded all of AOSP; if you have already done so, you can skip the git clone steps except the step that downloads the kernel sources.
+
+All examples in this section use the hikey kernel.
+Selecting a kernel
+
+This table lists the name and locations of the kernel sources and binaries:
+Device  Binary location     Source location     Build configuration
+hikey   device/linaro/hikey-kernel  kernel/hikey-linaro     hikey_defconfig
+angler  device/huawei/angler-kernel     kernel/msm  angler_defconfig
+bullhead    device/lge/bullhead-kernel  kernel/msm  bullhead_defconfig
+shamu   device/moto/shamu-kernel    kernel/msm  shamu_defconfig
+fugu    device/asus/fugu-kernel     kernel/x86_64   fugu_defconfig
+volantis    device/htc/flounder-kernel  kernel/tegra    flounder_defconfig
+hammerhead  device/lge/hammerhead-kernel    kernel/msm  hammerhead_defconfig
+flo     device/asus/flo-kernel/kernel   kernel/msm  flo_defconfig
+deb     device/asus/flo-kernel/kernel   kernel/msm  flo_defconfig
+manta   device/samsung/manta/kernel     kernel/exynos   manta_defconfig
+mako    device/lge/mako-kernel/kernel   kernel/msm  mako_defconfig
+grouper     device/asus/grouper/kernel  kernel/tegra    tegra3_android_defconfig
+tilapia     device/asus/grouper/kernel  kernel/tegra    tegra3_android_defconfig
+maguro  device/samsung/tuna/kernel  kernel/omap     tuna_defconfig
+toro    device/samsung/tuna/kernel  kernel/omap     tuna_defconfig
+panda   device/ti/panda/kernel  kernel/omap     panda_defconfig
+stingray    device/moto/wingray/kernel  kernel/tegra    stingray_defconfig
+wingray     device/moto/wingray/kernel  kernel/tegra    stingray_defconfig
+crespo  device/samsung/crespo/kernel    kernel/samsung  herring_defconfig
+crespo4g    device/samsung/crespo/kernel    kernel/samsung  herring_defconfig
+
+After determining the device project you want to work with, view the git log for the kernel binary. Device projects use the form device/<vendor>/<name>.
+
+$ git clone https://android.googlesource.com/kernel/hikey-linaro
+$ cd hikey-linaro
+$ git log --max-count=1 kernel
+
+The commit message for the kernel binary contains a partial git log of the kernel sources used to build the binary. The first entry in the log is the most recent (the one used to build the kernel). Make a note of the commit message as you will need it in a later step.
+Identifying kernel version
+
+To determine the kernel version used in a system image, run the following command against the kernel file:
+
+$ dd if=kernel bs=1 skip=$(LC_ALL=C grep -a -b -o $'\x1f\x8b\x08\x00\x00\x00\x00\x00' kernel | cut -d ':' -f 1) | zgrep -a 'Linux version'
+
+For Nexus 5 (hammerhead), the command is:
+
+$ dd if=zImage-dtb bs=1 skip=$(LC_ALL=C od -Ad -x -w2 zImage-dtb | grep 8b1f | cut -d ' ' -f1 | head -1) | zgrep -a 'Linux version'
+
+Downloading sources
+
+Download the source for the kernel you want to build using the appropriate git clone command:
+
+$ git clone https://android.googlesource.com/kernel/common.git
+$ git clone https://android.googlesource.com/kernel/hikey-linaro
+$ git clone https://android.googlesource.com/kernel/x86_64.git
+$ git clone https://android.googlesource.com/kernel/exynos.git
+$ git clone https://android.googlesource.com/kernel/goldfish.git
+$ git clone https://android.googlesource.com/kernel/msm.git
+$ git clone https://android.googlesource.com/kernel/omap.git
+$ git clone https://android.googlesource.com/kernel/samsung.git
+$ git clone https://android.googlesource.com/kernel/tegra.git
+
+    The goldfish project contains the kernel sources for the emulated platforms.
+    The msm project has the sources for ADP1, ADP2, Nexus One, Nexus 4, Nexus 5, Nexus 6, Nexus 5X, Nexus 6P, Nexus 7 (2013), and can be used as a starting point for work on Qualcomm MSM chipsets.
+    The omap project is used for PandaBoard and Galaxy Nexus, and can be used as a starting point for work on TI OMAP chipsets.
+    The samsung project is used for Nexus S, and can be used as a starting point for work on Samsung Hummingbird chipsets.
+    The tegra project is for Xoom, Nexus 7 (2012), Nexus 9, and can be used as a starting point for work on NVIDIA Tegra chipsets.
+    The exynos project has the kernel sources for Nexus 10, and can be used as a starting point for work on Samsung Exynos chipsets.
+    The x86_64 project has the kernel sources for Nexus Player, and can be used as a starting point for work on Intel x86_64 chipsets.
+    The hikey-linaro project is used for HiKey reference boards, and can be used as a starting point for work on HiSilicon 620 chipsets.
+
+Downloading a prebuilt gcc
+
+Ensure the prebuilt toolchain is in your path:
+
+$ export PATH=$(pwd)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin:$PATH
+
+or
+
+$ export PATH=$(pwd)/prebuilts/gcc/darwin-x86/arm/arm-eabi-4.6/bin:$PATH
+
+On a Linux host, if you don't have an Android source tree, you can download the prebuilt toolchain from:
+
+$ git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6
+
+Building the kernel
+
+When you know the last commit message for a kernel and have successfully downloaded the kernel source and prebuilt gcc, you are ready to build the kernel. The following build commands use the hikey kernel:
+
+$ export ARCH=arm64
+$ export CROSS_COMPILE=aarch64-linux-android-
+$ cd hikey-linaro
+$ git checkout -b android-hikey-linaro-4.1 origin/android-hikey-linaro-4.1
+$ make hikey_defconfig
+$ make
+
+To build a different kernel, simply replace hikey-linaro with the name of the kernel you want to build.
+
+The image outputs to the arch/arm64/boot/Image directory; the kernel binary outputs to the arch/arm64/boot/dts/hisilicon/hi6220-hikey.dtb fle. Copy the Image directory and the hi6220-hikey.dtb file to the hikey-kernel directory.
+
+Alternatively, you can include the TARGET_PREBUILT_KERNEL variable while using make bootimage (or any other make command line that builds a boot image). This variable is supported by all devices as it is set up via device/common/populate-new-device.sh. For example:
+
+$ export TARGET_PREBUILT_KERNEL=$your_kernel_path/arch/arm/boot/zImage-dtb
+
+Note: Kernel names differ by device. To locate the correct filename for your kernel, refer to device/<vendor>/<name> in the kernel source.
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
+
+
+-----------------------------------------------------------------------------------------------------------
+
+
+Known Issues
+In this document
+
+    Build issues
+        Missing CellBroadcastReceiver in toro builds
+        Missing CTS Native XML Generator
+        Black Gingerbread Emulator
+        Emulator built on MacOS 10.7 Lion doesn't work.
+        WITH_DEXPREOPT=true and emulator builds.
+        "Permission Denied" during builds.
+        Build errors related to using the wrong compiler.
+        Build errors caused by non-default tool settings.
+        Build error with 4.0.x and earlier on MacOS 10.7.
+        Build error on MacOS with XCode 4.3.
+        Build error with 4.0.x and earlier on Ubuntu 11.10.
+    Source sync issues
+        Difficulties syncing the source code (proxy issues).
+        Difficulties syncing the source tree (VirtualBox Ethernet issues).
+        Difficulties syncing the source tree (DNS issues).
+        Difficulties syncing the source tree (TCP issues).
+    Runtime issues
+        Camera and GPS don't work on Galaxy Nexus.
+
+Even with our best care, small problems sometimes slip in. This page keeps track of the known issues around using the Android source code.
+Build issues
+Missing CellBroadcastReceiver in toro builds
+
+Symptom
+On AOSP builds for toro (up to Jelly Bean 4.2.1), CellBroadcastReceiver doesn't get included in the system.
+
+Cause:
+There's a typo in vendor/samsung/toro/device-partial.mk, where PRODUCT_PACKAGES has the K replaced by an H.
+
+Fix: Use the latest packages for 4.2.2, or manually fix the typo.
+Missing CTS Native XML Generator
+
+Symptom: On some builds of IceCreamSandwich and later, the following warning is printed early during the build: /bin/bash: line 0: cd: cts/tools/cts-native-xml-generator/src/res: No such file or directory
+
+Cause: Some makefile references that path, which doesn't exist.
+
+Fix: None. This is a harmless warning.
+Black Gingerbread Emulator
+
+Symptom: The emulator built directly from the gingerbread branch doesn't start and stays stuck on a black screen.
+
+Cause: The gingerbread branch uses version R7 of the emulator, which doesn't have all the features necessary to run recent versions of gingerbread.
+
+Fix: Use version R12 of the emulator, and a newer kernel that matches those tools. No need to do a clean build.
+
+$ repo forall platform/external/qemu -c git checkout aosp/tools_r12
+$ make
+$ emulator -kernel prebuilt/android-arm/kernel/kernel-qemu-armv7
+
+Emulator built on MacOS 10.7 Lion doesn't work.
+
+Symptom: The emulator (any version) built on MacOS 10.7 Lion and/or on XCode 4.x doesn't start.
+
+Cause: Some change in the development environment causes the emulator to be compiled in a way that prevents it from working.
+
+Fix: Use an emulator binary from the SDK, which is built on MacOS 10.6 with XCode 3 and works on MacOS 10.7.
+WITH_DEXPREOPT=true and emulator builds.
+
+Symptom: When conducting partial builds or syncs (make system no dependencies) on emulator builds, the resulting build doesn't work.
+
+Cause: All emulator builds now run Dex optimization at build time by default, which requires to follow all dependencies to re-optimize the applications each time the framework changes.
+
+Fix: Locally disable Dex optimizations with export WITH_DEXPREOPT=false, delete the existing optimized versions with make installclean and run a full build to re-generate non-optimized versions. After that, partial builds will work.
+"Permission Denied" during builds.
+
+Symptom: All builds fail with "Permission Denied", possibly along with anti-virus warnings.
+
+Cause: Some anti-virus programs mistakenly recognize some source files in the Android source tree as if they contained viruses.
+
+Fix: After verifying that there are no actual viruses involved, disable anti-virus on the Android tree. This has the added benefit of reducing build times.
+Build errors related to using the wrong compiler.
+
+Symptom: The build fails with various symptoms. One such symptom is cc1: error: unrecognized command line option "-m32"
+
+Cause: The Android build system uses the default compiler in the PATH, assuming it's a suitable compiler to generate binaries that run on the host. Other situations (e.g. using the Android NDK or building the kernel) cause the default compiler to not be a host compiler.
+
+Fix: Use a "clean" shell, in which no previous actions could have swapped the default compiler.
+Build errors caused by non-default tool settings.
+
+Symptom: The build fails with various symptoms, possibly complaining about missing files or files that have the wrong format. One such symptom is member [...] in archive is not an object.
+
+Cause: The Android build system tends to use many host tools and to rely on their default behaviors. Some settings change those tools' behaviors and make them behave in ways that confuse the build system. Variables known to cause such issues are CDPATH and GREP_OPTIONS.
+
+Fix: Build Android in an environment that has as few customizations as possible.
+Build error with 4.0.x and earlier on MacOS 10.7.
+
+Symptom: Building IceCreamSandwich 4.0.x (and older versions) fails on MacOS 10.7 with errors similar to this: Undefined symbols for architecture i386: "_SDL_Init"
+
+Cause: 4.0.x is not compatible with MacOS 10.7.
+
+Fix: Either downgrade to MacOS 10.6, or use the master branch, which can be built on MacOS 10.7.
+
+$ repo init -b master
+$ repo sync
+
+Build error on MacOS with XCode 4.3.
+
+Symptom: All builds fail when using XCode 4.3.
+
+Cause: XCode 4.3 switched the default compiler from gcc to llvm, and llvm rejects code that used to be accepted by gcc.
+
+Fix: Use XCode 4.2.
+Build error with 4.0.x and earlier on Ubuntu 11.10.
+
+Symptom: Building IceCreamSandwich 4.0.x (and older versions) on Ubuntu 11.10 and newer fails with errors similar to this: <command-line>:0:0: warning: "_FORTIFY_SOURCE" redefined [enabled by default]
+
+Cause: Ubuntu 11.10 uses a version of gcc where that symbol is defined by default, and Android also defines that symbol, which causes a conflict.
+
+Fix: Either downgrade to Ubuntu 10.04, or use the master branch, which can be compiled on Ubuntu 11.10 and newer.
+
+$ repo init -b master
+$ repo sync
+
+Source sync issues
+Difficulties syncing the source code (proxy issues).
+
+Symptom: repo init or repo sync fail with http errors, typically 403 or 500.
+
+Cause: There are quite a few possible causes, most often related to http proxies, which have difficulties handling the large amounts of data getting transfered.
+
+Fix: While there's no general solution, using python 2.7 and explicitly using repo sync -j1 have been reported to improve the situation for some users.
+Difficulties syncing the source tree (VirtualBox Ethernet issues).
+
+Symptom: When running repo sync in some VirtualBox installations, the process hangs or fails with a variety of possible symptoms. One such symptom is DownloadError: HTTP 500 (Internal Server Error: Server got itself in trouble).
+
+Cause: The default network behavior of VirtualBox is to use NAT (Network Address Translation) to connect the guest system to the network. The heavy network activity of repo sync triggers some corner cases in the NAT code.
+
+Fix: Configure VirtualBox to use bridged network instead of NAT.
+Difficulties syncing the source tree (DNS issues).
+
+Symptom: When running repo sync, the process fails with various errors related to not recognizing the hostname. One such error is <urlopen error [Errno -2] Name or service not known>.
+
+Cause: Some DNS systems have a hard time coping with the high number of queries involved in syncing the source tree (there can be several hundred requests in a worst-case scenario).
+
+Fix: Manually resolve the relevant hostnames, and hard-code those results locally.
+
+You can resolve them with the nslookup command, which will give you one numerical IP address for each of those (typically in the "Address" part of the output).
+
+$ nslookup googlesource.com
+$ nslookup android.googlesource.com
+
+You can then hard-code them locally by editing /etc/hosts, and adding two lines in that file, of the form:
+
+aaa.bbb.ccc.ddd googlesource.com
+eee.fff.ggg.hhh android.googlesource.com
+
+Note that this will only work as long as the servers' addresses don't change, and if they do and you can't connect you'll have to resolve those hostnames again and edit etc/hosts accordingly.
+Difficulties syncing the source tree (TCP issues).
+
+Symptom: repo sync hangs while syncing, often when it's completed 99% of the sync.
+
+Cause: Some settings in the TCP/IP stack cause difficulties in some network environments, such that repo sync neither completes nor fails.
+
+Fix: On linux, sysctl -w net.ipv4.tcp_window_scaling=0. On MacOS, disable the rfc1323 extension in the network settings.
+Runtime issues
+Camera and GPS don't work on Galaxy Nexus.
+
+Symptom: Camera and GPS don't work on Galaxy Nexus. As an example, the Camera application crashes as soon as it's launched.
+
+Cause: Those hardware peripherals require proprietary libraries that aren't available in the Android Open Source Project.
+
+Fix: None.
+Site Feedback
+Except as noted, this content is licensed under Creative Commons Attribution 2.5. For details and restrictions, see the Content License.
+
+About Android  |  Community  |  Legal  |
